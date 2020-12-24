@@ -1,14 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
-
-
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { User } from './User'
 @Entity({ name: 'clock-in' })
 export class Clockin {
-	@PrimaryGeneratedColumn({ name: 'userId' })
-	public userId: number
+	@PrimaryGeneratedColumn({ name: 'clockinId' })
+	public clockinId: number
 
 	@Column({ name: 'lineId', type: 'varchar' })
-	public lineId:string
-
+	public lineId: string
 
 	@Column({ name: 'Distance', type: 'varchar' })
 	public Distance: string
@@ -18,16 +16,16 @@ export class Clockin {
 
 	@Column({ name: 'Date', type: 'varchar' })
 	public Date: string
+	UserlineId: any
 
+	// @ManyToOne(() => User, user => user.Clockins)
+	// user: User;
 
-	// @Column({ name: 'Projects', type: 'varchar' })
-	// public Projects: string
+	// @JoinColumn({ name: 'UserlineId' })
+	// public UserlineId: User;
 
-
-	// @Index()
-	// @ManyToOne((_type) => Company, (companyId) => companyId.user, {
-	// 	nullable: true,
-	// })
-	// @JoinColumn({ name: 'companyId' })
-	// public companyId: Company
+	@Index()
+	@ManyToOne((_type) => User, (userId) => userId.clockin, {})
+	@JoinColumn({ name: 'IDuserclockin' })
+	public userId: User
 }

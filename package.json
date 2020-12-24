@@ -6,10 +6,10 @@
   "scripts": {
     "start": "ts-node --transpile-only --compiler typescript --project tsconfig.json src/index.ts",
     "dev": "ts-node-dev --no-notify --respawn --transpileOnly src/index.ts",
-    "dev2": "ts-node-dev --no-notify --respawn --transpile-only src/index.ts",
     "build": "tsc",
     "test": "jest",
-    "start2": "nodemon -r esm src/conpostgres.ts"
+    "linebot": " node src/linebot.ts",
+    "line": "nodemon src/linebot.ts"
   },
   "author": "",
   "license": "ISC",
@@ -24,8 +24,9 @@
     "aspect.js": "0.8.1",
     "auth": "0.0.9",
     "aws-sdk": "2.602.0",
+    "axios": "^0.21.0",
     "bcrypt-nodejs": "^0.0.3",
-    "body-parser": "1.19.0",
+    "body-parser": "^1.19.0",
     "convert-excel-to-json": "1.6.1",
     "cors": "2.8.5",
     "dialogflow": "1.1.1",

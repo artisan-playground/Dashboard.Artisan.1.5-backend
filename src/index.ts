@@ -8,18 +8,11 @@ import path from 'path'
 import 'reflect-metadata'
 import { getConnection } from 'typeorm'
 import config from './configs/config'
-import {requestController } from './controllers/RequestController'
-
-import { clockoutController } from './controllers/Clock_outController'
-import { clockinController } from './controllers/Clock_inComtroller'
-import { companyController } from './controllers/CompanyController'
-import { userController } from './controllers/UserController'
 import routes from './routes/api'
 import { dbConnection } from './utils/db-connection'
 
 class ClarisApp {
 	public async init() {
-		console.log('log::', routes)
 		const app = express()
 		console.log('initialize database')
 		try {
@@ -48,17 +41,15 @@ class ClarisApp {
 				app.use(Sentry.Handlers.requestHandler())
 				app.use(Sentry.Handlers.errorHandler())
 				app.use(cors())
-				// app.use('/api', routes)
-				app.post('/api/login', userController.login)
-				app.post('/api/create',userController.creater)
-				app.put('/api/update',userController.updater)
-				app.post('/api/delete',userController.deleter)
-				app.post('/api/company',companyController.companyUser)
-				app.post('/api/clockout',clockoutController.creatCO)
-				app.post('/api/request',requestController.creatReq)
-				app.post('/api/clockin',clockinController.creatCI)
-
-
+				app.use('/api', routes)
+				// app.post('/api/login', userController.login)
+				// app.post('/api/create',userController.creater)
+				// app.put('/api/update',userController.updater)
+				// app.post('/api/delete',userController.deleter)
+				// app.post('/api/company',companyController.companyUser)
+				// app.post('/api/clockout',clockoutController.creatCO)
+				// app.post('/api/request',requestController.creatReq)
+				// app.post('/api/clockin',clockinController.creatCI)
 
 				app.get('/', (req: Request, res: Response) => {
 					console.log(process.env)

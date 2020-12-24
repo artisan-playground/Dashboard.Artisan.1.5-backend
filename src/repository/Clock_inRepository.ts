@@ -2,7 +2,7 @@ import { EntityRepository, getCustomRepository, Repository } from 'typeorm';
 import { Clockin } from '../models/Clock-in';
 @EntityRepository(Clockin)
 export class  ClockinRepository extends Repository<Clockin> {
-	public async clockout( clockin:Clockin): Promise< Clockin | undefined> {
+	public async clockin( clockin:Clockin): Promise< Clockin | undefined> {
 
 
 		const dbdata = await getCustomRepository(ClockinRepository)
