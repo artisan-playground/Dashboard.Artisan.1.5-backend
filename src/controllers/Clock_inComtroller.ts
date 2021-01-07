@@ -32,8 +32,8 @@ class ClockinController {
 
 			const result = await getCustomRepository(ClockinRepository).clockin(clock_in)
 			// console.log(777, result)
-			// console.log(time)
-			// console.log(date)
+			console.log(time)
+			console.log(date)
 
 			return res.status(200).json({
 				responseBody: result,
