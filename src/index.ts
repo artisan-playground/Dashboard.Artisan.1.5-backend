@@ -33,26 +33,19 @@ class ClarisApp {
 						useTempFiles: true,
 						tempFileDir: path.join(__dirname, 'temp'),
 					})
-				) // configure fileupload
+				)
 				Sentry.init({
 					dsn: 'https://4b4b0af4328d4f399dfd02de5e74a5ab@o390647.ingest.sentry.io/5235389',
 				})
-				// The request handler must be the first middleware on the app
+
 				app.use(Sentry.Handlers.requestHandler())
 				app.use(Sentry.Handlers.errorHandler())
 				app.use(cors())
 				app.use('/api', routes)
-				// app.post('/api/login', userController.login)
-				// app.post('/api/create',userController.creater)
-				// app.put('/api/update',userController.updater)
-				// app.post('/api/delete',userController.deleter)
-				// app.post('/api/company',companyController.companyUser)
-				// app.post('/api/clockout',clockoutController.creatCO)
-				// app.post('/api/request',requestController.creatReq)
-				// app.post('/api/clockin',clockinController.creatCI)
+
 
 				app.get('/', (req: Request, res: Response) => {
-					console.log(process.env)
+
 					return res.render('welcome', {
 						message: `Welcome to service`,
 					})
@@ -67,12 +60,12 @@ class ClarisApp {
 					next()
 				})
 				app.listen(port, () => {
-					console.log(`Server running on port: ${port}`)
+
 				})
 				return app
 			}
 		} catch (error) {
-			console.log('error', error.message)
+
 		}
 	}
 }

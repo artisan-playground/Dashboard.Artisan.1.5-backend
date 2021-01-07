@@ -11,7 +11,7 @@ class ClockinController {
 
 		console.log('User input', clock_in)
 
-		clock_in.lineId = 'hhhhdasdasdasdas'
+		clock_in.lineId = clock_in.id
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
@@ -20,10 +20,8 @@ class ClockinController {
 			Date: date,
 		})
 
-		console.log('seeee', getData?.userId)
-
 		if (!getData) {
-			console.log('success')
+			console.log('บันทึกสำเร็จ')
 
 			clock_in.Distance = clock_in.distance
 
@@ -31,9 +29,6 @@ class ClockinController {
 			clock_in.Date = date
 
 			const result = await getCustomRepository(ClockinRepository).clockin(clock_in)
-			// console.log(777, result)
-			console.log(time)
-			console.log(date)
 
 			return res.status(200).json({
 				responseBody: result,

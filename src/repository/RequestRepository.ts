@@ -7,8 +7,7 @@ export class RequestRepository extends Repository<Requests> {
 			.createQueryBuilder('request')
 
 			.getMany()
-		console.log(dbdata)
-		// console.log(user.username);
+
 
 		const result = await getCustomRepository(RequestRepository).save(requests)
 

@@ -20,6 +20,6 @@ const configs: Config = {
 	LINE_REPLY_MESSAGE_ENDPOINT:
 		process.env.LINE_REPLY_MESSAGE_ENDPOINT || 'https://api.line.me/v2/bot/message/reply',
 }
-console.log(configs)
+
 
 export default configs

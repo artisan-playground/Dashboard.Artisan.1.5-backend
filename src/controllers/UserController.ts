@@ -123,12 +123,7 @@ class UserController {
 		const result = await getCustomRepository(UserRepository).updaterr(user)
 		return res.status(200).json(result)
 	}
-	public async deleter(req: Request, res: Response): Promise<Response> {
-		const user: User = req.body
 
-		const result = await getCustomRepository(UserRepository).delet(user)
-		return res.status(200).json(result)
-	}
 }
 
 export const userController = new UserController()

@@ -74,7 +74,7 @@ class GDayBot {
 							{
 								type: 'uri',
 								label: 'Go',
-								uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
+								uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
 							},
 						],
 					},
@@ -114,7 +114,7 @@ class GDayBot {
 							{
 								type: 'uri',
 								label: 'Go',
-								uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
+								uri: `https://nook.artisandigital.tech/Vatsclockout?id=${userId}`,
 							},
 						],
 					},
@@ -153,7 +153,7 @@ class GDayBot {
 							{
 								type: 'uri',
 								label: 'Go',
-								uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
+								uri: `https://nook.artisandigital.tech/Vleaveform?id=${userId}`,
 							},
 						],
 					},
@@ -233,7 +233,7 @@ class GDayBot {
 							{
 								type: 'uri',
 								label: 'ยืนยัน',
-								uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
+								uri: `https://nook.artisandigital.tech/Vatslogin?id=${userId}`,
 							},
 						],
 					},

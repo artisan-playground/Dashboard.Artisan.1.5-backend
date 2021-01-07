@@ -9,9 +9,7 @@ class ClockoutController {
 	public async creatCO(req: Request, res: Response): Promise<Response> {
 		const clock_out: Clockout = req.body
 
-		console.log('input', clock_out)
-
-		clock_out.lineId = 'U3ef5f557fecc78c5af1f95a703865b8b'
+		// clock_out.lineId = clock_out.lineId
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
@@ -20,14 +18,10 @@ class ClockoutController {
 			lineId: clock_out.lineId,
 			Date: date,
 		})
-		console.log(getData?.userId)
-
-		console.log('database', getData)
-		console.log('userId', getData?.userId)
-
-		// console.log('seeee', getData.length)
 
 		if (!getData) {
+			console.log('บันทึกสำเร็จ')
+
 			clock_out.Time = time
 			clock_out.Date = date
 
@@ -42,6 +36,8 @@ class ClockoutController {
 				responseCode: 200,
 			})
 		} else {
+			console.log()
+
 			console.log('แก้ไข เรียบร้อย')
 
 			const result = await getCustomRepository(ClockoutRepository).update(getData.userId, {
@@ -56,8 +52,8 @@ class ClockoutController {
 			})
 
 			return res.status(200).json({
-				responseBody: result,
-				message: `Success`,
+				// responseBody: result,
+				message: `แก้ไขสำเร็จ`,
 				responseCode: 200,
 			})
 		}
