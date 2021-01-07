@@ -68,7 +68,7 @@ class GDayBot {
 						type: 'buttons',
 						thumbnailImageUrl: 'https://www.prosoftgps.com/upload/6155/5W5b86scfv.png',
 						imageBackgroundColor: '#A9F100',
-						title: '                         Clock In Now !',
+						title: '                         Clock In !',
 						text: 'Do you want to Clockin now ? ',
 						actions: [
 							{
@@ -78,22 +78,6 @@ class GDayBot {
 							},
 						],
 					},
-
-					// type: 'template',
-					// altText: 'clock-in',
-					// template: {
-					// 	backgroundColor: '#000',
-					// 	type: 'buttons',
-					// 	title: 'Clock-in',
-					// 	text: `click เพื่อ clock-in`,
-					// 	actions: [
-					// 		{
-					// 			type: 'uri',
-					// 			label: 'click',
-					// 			uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
-					// 		},
-					// 	],
-					// },
 				},
 			],
 		})
@@ -124,7 +108,7 @@ class GDayBot {
 						thumbnailImageUrl:
 							'https://image.freepik.com/free-vector/businessman-running-exit-door-sign-he-get-off-work_115990-136.jpg',
 						imageBackgroundColor: '#A9F100',
-						title: '                         Clock Out Now !',
+						title: '                         Clock Out !',
 						text: 'Do you want to ClockOut now ? ',
 						actions: [
 							{
@@ -134,22 +118,6 @@ class GDayBot {
 							},
 						],
 					},
-
-					// type: 'template',
-					// altText: 'clock-in',
-					// template: {
-					// 	backgroundColor: '#000',
-					// 	type: 'buttons',
-					// 	title: 'Clock-in',
-					// 	text: `click เพื่อ Daily`,
-					// 	actions: [
-					// 		{
-					// 			type: 'uri',
-					// 			label: 'click',
-					// 			uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
-					// 		},
-					// 	],
-					// },
 				},
 			],
 		})
@@ -179,7 +147,7 @@ class GDayBot {
 						thumbnailImageUrl:
 							'https://playtech.ro/stiri/wp-content/uploads/2020/08/Concedii-medicale-Rom%C3%A2nia.-Schimb%C4%83ri-importante-%C3%AEn-UE-%C8%99i-%C3%AEn-%C8%9Bara-noastr%C4%83.-Ce-trebuie-s%C4%83-%C8%99tim-din-acest-moment.jpg',
 						imageBackgroundColor: '#A9F100',
-						title: '                         Request Now !',
+						title: '                         Request !',
 						text: 'Do you want to Request now ? ',
 						actions: [
 							{
@@ -189,22 +157,6 @@ class GDayBot {
 							},
 						],
 					},
-
-					// type: 'template',
-					// altText: 'clock-in',
-					// template: {
-					// 	backgroundColor: '#000',
-					// 	type: 'buttons',
-					// 	title: 'Clock-in',
-					// 	text: `click เพื่อ Request`,
-					// 	actions: [
-					// 		{
-					// 			type: 'uri',
-					// 			label: 'click',
-					// 			uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
-					// 		},
-					// 	],
-					// },
 				},
 			],
 		})
@@ -233,7 +185,7 @@ class GDayBot {
 						type: 'buttons',
 						thumbnailImageUrl: 'https://shit.management/content/images/2019/07/team_work.jpg',
 						imageBackgroundColor: '#A9F100',
-						title: '                         Project Now !',
+						title: '                         Project !',
 						text: 'Do you want to Project now ? ',
 						actions: [
 							{
@@ -243,22 +195,6 @@ class GDayBot {
 							},
 						],
 					},
-
-					// type: 'template',
-					// altText: 'clock-in',
-					// template: {
-					// 	backgroundColor: '#000',
-					// 	type: 'buttons',
-					// 	title: 'Clock-in',
-					// 	text: `click เพื่อ Request`,
-					// 	actions: [
-					// 		{
-					// 			type: 'uri',
-					// 			label: 'click',
-					// 			uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
-					// 		},
-					// 	],
-					// },
 				},
 			],
 		})
@@ -278,24 +214,29 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					type: 'text',
+					// type: 'text',
 
-					text: `https://webhook.artisandigital.tech?id=${userId}`,
-					// type: 'template',
-					// altText: 'ลงทะเบียนสมาชิก',
-					// template: {
-					// 	backgroundColor: '#000',
-					// 	type: 'buttons',
-					// 	title: 'กรุณาลงทะเบียน',
-					// 	text: `กรุณาสมัครสมาชิกก่อนใช้บริการ`,
-					// 	actions: [
-					// 		{
-					// 			type: 'uri',
-					// 			label: 'สมัครสมาชิก',
-					// 			uri: `https://hook.artisandigital.tech/register?id=${userId}`,
-					// 		},
-					// 	],
-					// },
+					// text: `https://webhook.artisandigital.tech?id=${userId}`,
+					type: 'template',
+					altText: 'this is a buttons template',
+					template: {
+						type: 'buttons',
+						thumbnailImageUrl:
+							'https://agora.rovernet.eu/wp-content/uploads/2020/01/Registration.jpeg',
+						imageBackgroundColor: '#A9F100',
+
+						title: '                         Register !',
+						weight: 'bold',
+						size: 'xl',
+						text: 'กรุณายืนยันตัวตนในการเข้าใช้งาน ? ',
+						actions: [
+							{
+								type: 'uri',
+								label: 'ยืนยัน',
+								uri: `https://webhook.artisandigital.tech/clock-in?id=${userId}`,
+							},
+						],
+					},
 				},
 			],
 		})

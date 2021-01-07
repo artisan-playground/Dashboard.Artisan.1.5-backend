@@ -47,8 +47,8 @@ class UserController {
 	public async ChackUser(req: Request, res: Response): Promise<Response> {
 		const user: User = req.body
 		user.status = 1
-		user.UserlineId = 'U3ef5f557fecc78c5af1f95a703865b8b'
 
+		// user.UserlineId = 'U3ef5f557fecc78c5af1f95a703865b8b'
 		const getemail = await getCustomRepository(UserRepository).findOne({ username: user.username })
 		console.log('User input', user)
 		console.log('data base', getemail)
@@ -89,8 +89,8 @@ class UserController {
 			})
 
 			return res.status(200).json({
-				responseBody: getemail,
-				message: `Send to Email Success`,
+				responseBody: result,
+				message: `Success`,
 				responseCode: 200,
 			})
 		} else {

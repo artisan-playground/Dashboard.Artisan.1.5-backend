@@ -23,8 +23,8 @@ export class Requests {
 	@Column({ name: 'Leaveevent', type: 'text' })
 	public Leaveevent: string
 
-	@Column({ name: 'admin', type: 'varchar' })
-	public admin: string
+	// @Column({ name: 'admin', type: 'varchar' })
+	// public admin: string
 
 	// @Column({ name: 'Document', type: 'image' })
 	// public Document: Image

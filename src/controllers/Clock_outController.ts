@@ -8,33 +8,57 @@ import { ClockoutRepository } from '../repository/Clock_outRepository'
 class ClockoutController {
 	public async creatCO(req: Request, res: Response): Promise<Response> {
 		const clock_out: Clockout = req.body
-		console.log('555', req.body)
-		console.log('666', clock_out)
+
+		console.log('input', clock_out)
 
 		clock_out.lineId = 'U3ef5f557fecc78c5af1f95a703865b8b'
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
 
-		clock_out.Time = time
-		clock_out.Date = date
+		const getData = await getCustomRepository(ClockoutRepository).findOne({
+			lineId: clock_out.lineId,
+			Date: date,
+		})
+		console.log(getData?.userId)
 
-		const result = await getCustomRepository(ClockoutRepository).clockout(clock_out)
-		console.log(777, result)
-		console.log(time)
-		console.log(date)
+		console.log('database', getData)
+		console.log('userId', getData?.userId)
 
-		if (result) {
+		// console.log('seeee', getData.length)
+
+		if (!getData) {
+			clock_out.Time = time
+			clock_out.Date = date
+
+			const result = await getCustomRepository(ClockoutRepository).clockout(clock_out)
+			console.log(777, result)
+			console.log(time)
+			console.log(date)
+
 			return res.status(200).json({
 				responseBody: result,
-				message: `success`,
+				message: `Success`,
 				responseCode: 200,
 			})
 		} else {
+			console.log('แก้ไข เรียบร้อย')
+
+			const result = await getCustomRepository(ClockoutRepository).update(getData.userId, {
+				lineId: clock_out.lineId,
+				Today: clock_out.Today,
+				Tomorrow: clock_out.Tomorrow,
+				Issue: clock_out.Issue,
+				Projects: clock_out.Projects,
+				Tasks: clock_out.Tasks,
+				Date: date,
+				Time: time,
+			})
+
 			return res.status(200).json({
 				responseBody: result,
-				message: `fail`,
-				responseCode: 401,
+				message: `Success`,
+				responseCode: 200,
 			})
 		}
 	}

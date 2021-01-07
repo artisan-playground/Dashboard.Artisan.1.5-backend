@@ -11,17 +11,10 @@ class RequestController {
 		console.log('555', req.body)
 		console.log('666', requests)
 
-		const d = new Date()
-		const time = d.toLocaleTimeString()
-		const date = d.toLocaleDateString()
-
-		// requests.Time = time;
-		// requests.Date = date;
-
 		const result = await getCustomRepository(RequestRepository).clockreq(requests)
-		console.log(777, result)
-		console.log(time)
-		console.log(date)
+		// console.log(777, result)
+		// console.log(time)
+		// console.log(date)
 
 		if (result) {
 			return res.status(200).json({
