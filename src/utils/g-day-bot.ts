@@ -55,8 +55,7 @@ class GDayBot {
 	}
 
 	public ClockIn(reply_token: string, userId: string) {
-		console.log('sadsd', reply_token)
-		// console.log(this.TokenGDayAccess)
+	
 		const headers = {
 			'Content-Type': 'application/json',
 			Authorization: this.TokenGDayAccess,
@@ -67,9 +66,7 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
 
-					// text: `Go to location`,
 
 					type: 'template',
 					altText: 'this is a buttons template',
@@ -146,9 +143,7 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
 
-					// text: `Go to Request`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -224,9 +219,7 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
 
-					// text: `https://webhook.artisandigital.tech?id=${userId}`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -258,19 +251,13 @@ class GDayBot {
 	}
 
 	event = schedule.scheduleJob('*/1 * * * *', async (line: string, TokenGDayAccess: any) => {
-		// const d = new Date()
-		// const time = d.toLocaleTimeString()
-		// const date = d.toLocaleDateString()
-		// const getData = await getCustomRepository(UserRepository).getlineId()
-		// console.log();
+
 
 		line = 'U3ef5f557fecc78c5af1f95a703865b8b'
 		TokenGDayAccess = config.AUTH_LINEBOT_GDAY
-		console.log(line)
-		// console.log(reply_toke)
-		console.log(TokenGDayAccess)
+
 		try {
-			console.log('เข้า try ')
+
 
 			request.post({
 				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
