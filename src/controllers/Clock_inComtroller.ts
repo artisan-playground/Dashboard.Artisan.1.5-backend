@@ -9,7 +9,6 @@ class ClockinController {
 	public async creatCI(req: Request, res: Response): Promise<Response> {
 		const clock_in: Clockin = req.body
 
-		console.log('User input', clock_in)
 
 		clock_in.lineId = clock_in.id
 		const d = new Date()
@@ -21,7 +20,7 @@ class ClockinController {
 		})
 
 		if (!getData) {
-			console.log('บันทึกสำเร็จ')
+
 
 			clock_in.Distance = clock_in.distance
 
@@ -36,7 +35,7 @@ class ClockinController {
 				responseCode: 200,
 			})
 		} else {
-			console.log('fail')
+
 			return res.status(200).json({
 				message: `วันนี้คุณได้ทำการ Clock-in ไปแล้วงับๆ`,
 				responseCode: 200,

@@ -10,7 +10,6 @@ export class ClockoutRepository extends Repository<Clockout> {
 
 		const result = await getCustomRepository(ClockoutRepository).save(clockout)
 
-		console.log('Save Success')
 
 		return result
 	}

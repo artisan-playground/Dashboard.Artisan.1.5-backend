@@ -7,12 +7,10 @@ export class ClockinRepository extends Repository<Clockin> {
 			.createQueryBuilder('clockin')
 
 			.getMany()
-		// console.log(dbdata)
-		// console.log(user.username)
+	
 
 		const result = await getCustomRepository(ClockinRepository).save(clockin)
 
-		console.log('Save Success')
 		return result
 	}
 }

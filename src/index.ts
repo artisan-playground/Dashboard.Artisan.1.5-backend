@@ -14,7 +14,7 @@ import { dbConnection } from './utils/db-connection'
 class ClarisApp {
 	public async init() {
 		const app = express()
-		console.log('initialize database')
+		// console.log('initialize database')
 		try {
 			await dbConnection.initDatabase()
 			const connection = getConnection()

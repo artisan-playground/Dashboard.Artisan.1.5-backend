@@ -13,8 +13,7 @@ class UserController {
 
 		// user.UserlineId = 'U3ef5f557fecc78c5af1f95a703865b8b'
 		const getemail = await getCustomRepository(UserRepository).findOne({ username: user.username })
-		console.log('User input', user)
-		console.log('data base', getemail)
+	
 
 		if (getemail) {
 			;('use strict')

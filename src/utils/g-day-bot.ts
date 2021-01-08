@@ -17,7 +17,6 @@ class GDayBot {
 		const userId = req.body.events[0].source.userId
 
 		const getUser = await getCustomRepository(UserRepository).findOne({ UserlineId: userId })
-		console.log(getUser)
 
 		if (getUser) {
 			if (reply_text == 'Clock-in') {
@@ -55,19 +54,15 @@ class GDayBot {
 	}
 
 	public ClockIn(reply_token: string, userId: string) {
-	
 		const headers = {
 			'Content-Type': 'application/json',
 			Authorization: this.TokenGDayAccess,
 		}
-		console.log(this.TokenGDayAccess)
 
 		const body = JSON.stringify({
 			to: userId,
 			messages: [
 				{
-
-
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -143,7 +138,6 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -219,7 +213,6 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -251,14 +244,10 @@ class GDayBot {
 	}
 
 	event = schedule.scheduleJob('*/1 * * * *', async (line: string, TokenGDayAccess: any) => {
-
-
 		line = 'U3ef5f557fecc78c5af1f95a703865b8b'
 		TokenGDayAccess = config.AUTH_LINEBOT_GDAY
 
 		try {
-
-
 			request.post({
 				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
 				headers: {
@@ -275,9 +264,7 @@ class GDayBot {
 					],
 				}),
 			})
-		} catch (e) {
-			console.error(e)
-		}
+		} catch (e) {}
 	})
 }
 

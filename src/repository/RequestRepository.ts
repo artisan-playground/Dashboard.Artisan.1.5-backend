@@ -11,7 +11,6 @@ export class RequestRepository extends Repository<Requests> {
 
 		const result = await getCustomRepository(RequestRepository).save(requests)
 
-		console.log('Save Success')
 
 		return result
 	}

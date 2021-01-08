@@ -16,7 +16,7 @@ class DBConnection {
 			})
 			.catch((err) => {
 				console.log('failed to create connection')
-				console.log(err)
+			
 			})
 	}
 }
