@@ -1,12 +1,8 @@
-FROM node:lts-alpine as node
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-COPY package.json /usr/src/app/
-#RUN yarn
-COPY . /usr/src/app
-RUN yarn
-# EXPOSE 8100
-ADD start.sh /
-RUN chmod +x /start.sh
-
-CMD ["/start.sh"]
+FROM node:lts-alpine
+WORKDIR /app
+COPY . ./
+COPY .env.dev ./.env
+RUN yarn --frozen-lockfile
+ENV PORT=8080 HOST=0.0.0.0
+EXPOSE 8080
+CMD ["yarn", "start", "--port=8080"]
