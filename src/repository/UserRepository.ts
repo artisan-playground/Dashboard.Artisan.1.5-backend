@@ -5,7 +5,7 @@ export class UserRepository extends Repository<User> {
 	public async login(user: User): Promise<User | undefined> {
 		const result = await getCustomRepository(UserRepository).save({ UserlineId: user.UserlineId })
 
-		console.log(result)
+	
 		return result
 	}
 
@@ -18,15 +18,14 @@ export class UserRepository extends Repository<User> {
 			})
 			.getOne()
 
-		console.log(dbdata)
-		console.log(user.username)
+
 		return dbdata
 	}
-	public async updaterr(user: User): Promise<User | undefined> {
+	public async getlineId(user: User): Promise<User | undefined> {
 		const result = await getCustomRepository(UserRepository)
 			.createQueryBuilder('user')
-			.where('user.username =:username ', {
-				UserlineId: user.UserlineId,
+			.where('UserlineId: user.UserlineId ', {
+				// UserlineId: user.UserlineId,
 				// username: user.username,
 			})
 			.getOne()

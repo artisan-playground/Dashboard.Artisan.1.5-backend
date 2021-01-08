@@ -4,14 +4,19 @@ import { getCustomRepository } from 'typeorm'
 import { UserRepository } from '../repository/UserRepository'
 import config from './../configs/config'
 
+const moment = require('moment')
+const schedule = require('node-schedule')
+const rule = new schedule.RecurrenceRule()
+rule.minute = 1
+
 class GDayBot {
 	public TokenGDayAccess = config.AUTH_LINEBOT_GDAY
 	public async listenerWebHook(req: Request, res: Response) {
 		const reply_token: string = req.body.events[0].replyToken
 		const reply_text: string = req.body.events[0].message.text
 		const userId = req.body.events[0].source.userId
+
 		const getUser = await getCustomRepository(UserRepository).findOne({ UserlineId: userId })
-		console.log(getUser)
 
 		if (getUser) {
 			if (reply_text == 'Clock-in') {
@@ -53,15 +58,11 @@ class GDayBot {
 			'Content-Type': 'application/json',
 			Authorization: this.TokenGDayAccess,
 		}
+
 		const body = JSON.stringify({
-			replyToken: reply_token,
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
-
-					// text: `Go to location`,
-
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -137,9 +138,6 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
-
-					// text: `Go to Request`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -209,14 +207,12 @@ class GDayBot {
 			'Content-Type': 'application/json',
 			Authorization: this.TokenGDayAccess,
 		}
+
 		const body = JSON.stringify({
 			replyToken: reply_token,
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
-
-					// text: `https://webhook.artisandigital.tech?id=${userId}`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -246,6 +242,30 @@ class GDayBot {
 			body: body,
 		})
 	}
+
+	event = schedule.scheduleJob('*/1 * * * *', async (line: string, TokenGDayAccess: any) => {
+		line = 'U3ef5f557fecc78c5af1f95a703865b8b'
+		TokenGDayAccess = config.AUTH_LINEBOT_GDAY
+
+		try {
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: line,
+					messages: [
+						{
+							type: 'text',
+							text: 'แจ้งเตือนนน',
+						},
+					],
+				}),
+			})
+		} catch (e) {}
+	})
 }
 
 export const gDayBot = new GDayBot()

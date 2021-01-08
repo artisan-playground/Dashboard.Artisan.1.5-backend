@@ -7,9 +7,7 @@ import { gDayBot } from '../utils/g-day-bot'
 const route = Router()
 route.post('/gday-webhook', gDayBot.listenerWebHook.bind(gDayBot))
 route.post('/checkuser', userController.ChackUser)
-route.post('/login', userController.login)
-route.post('/create', userController.creater)
-route.put('/update', userController.updater)
+
 route.post('/clockout', clockoutController.creatCO)
 route.post('/request', requestController.creatReq)
 route.post('/clockin', clockinController.creatCI)
