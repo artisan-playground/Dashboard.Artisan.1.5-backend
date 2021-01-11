@@ -100,9 +100,7 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
 
-					// text: `Go to Daily`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -175,9 +173,7 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
 
-					// text: `Go to Request`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {

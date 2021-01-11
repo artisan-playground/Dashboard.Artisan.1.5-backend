@@ -15,8 +15,7 @@ const authen = (req: Request, res: Response, next: NextFunction) => {
 			message: 'Unauthorization',
 		})
 	}
-	// send Decode with header
-	// req.body.user = decode
+
 	return next()
 }
 

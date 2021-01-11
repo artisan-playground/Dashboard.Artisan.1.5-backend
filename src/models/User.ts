@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Clockin } from './Clock-in'
-// import { Company } from './Company'
+
 @Entity({ name: 'user' })
 export class User {
 	@PrimaryGeneratedColumn({ name: 'userId' })
@@ -18,10 +18,5 @@ export class User {
 	@OneToMany((_type) => Clockin, (clockin) => clockin.userId)
 	public clockin: Clockin[]
 
-	// @Index()
-	// @ManyToOne((_type) => Company, (companyId) => companyId.user, {
-	// 	nullable: true,
-	// })
-	// @JoinColumn({ name: 'companyId' })
-	// public companyId: Company
+
 }

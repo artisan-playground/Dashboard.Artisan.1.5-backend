@@ -18,11 +18,6 @@ export class Clockin {
 	public Date: string
 	UserlineId: any
 
-	// @ManyToOne(() => User, user => user.Clockins)
-	// user: User;
-
-	// @JoinColumn({ name: 'UserlineId' })
-	// public UserlineId: User;
 
 	@Index()
 	@ManyToOne((_type) => User, (userId) => userId.clockin, {})

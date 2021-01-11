@@ -13,7 +13,7 @@ export class UserRepository extends Repository<User> {
 			.createQueryBuilder('user')
 			.where('user.username =:username', {
 				UserlineId: user.UserlineId,
-				// password: user.password,
+
 			})
 			.getOne()
 
@@ -23,8 +23,7 @@ export class UserRepository extends Repository<User> {
 		const result = await getCustomRepository(UserRepository)
 			.createQueryBuilder('user')
 			.where('UserlineId: user.UserlineId ', {
-				// UserlineId: user.UserlineId,
-				// username: user.username,
+
 			})
 			.getOne()
 
