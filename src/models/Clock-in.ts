@@ -16,8 +16,17 @@ export class Clockin {
 
 	@Column({ name: 'Date', type: 'varchar' })
 	public Date: string
-	UserlineId: any
 
+	@Column({ name: 'Clockin_status', type: 'varchar' })
+	public Clockin_status: string
+
+	@Column({ name: 'Clockin_history', type: 'varchar' })
+	public Clockin_history: string
+
+	@Column({ name: 'TimeLate', type: 'varchar' })
+	public TimeLate: string
+
+	UserlineId: any
 
 	@Index()
 	@ManyToOne((_type) => User, (userId) => userId.clockin, {})

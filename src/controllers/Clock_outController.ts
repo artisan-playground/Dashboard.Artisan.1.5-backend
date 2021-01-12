@@ -19,13 +19,10 @@ class ClockoutController {
 		})
 
 		if (!getData) {
-
-
 			clock_out.Time = time
 			clock_out.Date = date
 
 			const result = await getCustomRepository(ClockoutRepository).clockout(clock_out)
-
 
 			return res.status(200).json({
 				responseBody: result,
@@ -33,9 +30,6 @@ class ClockoutController {
 				responseCode: 200,
 			})
 		} else {
-
-
-
 			const result = await getCustomRepository(ClockoutRepository).update(getData.userId, {
 				lineId: clock_out.lineId,
 				Today: clock_out.Today,
@@ -48,7 +42,6 @@ class ClockoutController {
 			})
 
 			return res.status(200).json({
-
 				message: `แก้ไขสำเร็จ`,
 				responseCode: 200,
 			})
