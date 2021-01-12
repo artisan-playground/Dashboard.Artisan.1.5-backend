@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import request from 'request'
 import { getCustomRepository } from 'typeorm'
+import { ClockinRepository } from '../repository/Clock_inRepository'
 import { UserRepository } from '../repository/UserRepository'
 import config from './../configs/config'
 
@@ -99,9 +100,7 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
 
-					// text: `Go to Daily`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -174,9 +173,7 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-					// type: 'text',
 
-					// text: `Go to Request`,
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -243,28 +240,46 @@ class GDayBot {
 		})
 	}
 
-	event = schedule.scheduleJob('*/1 * * * *', async (line: string, TokenGDayAccess: any) => {
-		line = 'U3ef5f557fecc78c5af1f95a703865b8b'
-		TokenGDayAccess = config.AUTH_LINEBOT_GDAY
+	event = schedule.scheduleJob('*/59 * * * *', async (line: string, TokenGDayAccess: any) => {
+		const countlineid = await getCustomRepository(UserRepository).find({
+			select: ['UserlineId'],
+		})
 
-		try {
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: line,
-					messages: [
-						{
-							type: 'text',
-							text: 'แจ้งเตือนนน',
-						},
-					],
-				}),
+		for (let Idline = 0; Idline < countlineid.length; Idline++) {
+			line = countlineid[Idline].UserlineId
+
+			const d = new Date()
+
+			const date = d.toLocaleDateString()
+
+			const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+				lineId: line,
+				Date: date,
 			})
-		} catch (e) {}
+
+			if (!sendlineId) {
+				TokenGDayAccess = config.AUTH_LINEBOT_GDAY
+
+				try {
+					request.post({
+						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: this.TokenGDayAccess,
+						},
+						body: JSON.stringify({
+							to: line,
+							messages: [
+								{
+									type: 'text',
+									text: 'แจ้งเตือนนน',
+								},
+							],
+						}),
+					})
+				} catch (e) {}
+			}
+		}
 	})
 }
 

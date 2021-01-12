@@ -5,7 +5,6 @@ export class UserRepository extends Repository<User> {
 	public async login(user: User): Promise<User | undefined> {
 		const result = await getCustomRepository(UserRepository).save({ UserlineId: user.UserlineId })
 
-	
 		return result
 	}
 
@@ -14,10 +13,9 @@ export class UserRepository extends Repository<User> {
 			.createQueryBuilder('user')
 			.where('user.username =:username', {
 				UserlineId: user.UserlineId,
-				// password: user.password,
+
 			})
 			.getOne()
-
 
 		return dbdata
 	}
@@ -25,10 +23,10 @@ export class UserRepository extends Repository<User> {
 		const result = await getCustomRepository(UserRepository)
 			.createQueryBuilder('user')
 			.where('UserlineId: user.UserlineId ', {
-				// UserlineId: user.UserlineId,
-				// username: user.username,
+
 			})
 			.getOne()
+
 		return result
 	}
 }

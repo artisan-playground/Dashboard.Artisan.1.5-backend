@@ -9,7 +9,6 @@ class ClockoutController {
 	public async creatCO(req: Request, res: Response): Promise<Response> {
 		const clock_out: Clockout = req.body
 
-		// clock_out.lineId = clock_out.lineId
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
@@ -34,7 +33,7 @@ class ClockoutController {
 				responseCode: 200,
 			})
 		} else {
-		
+
 
 
 			const result = await getCustomRepository(ClockoutRepository).update(getData.userId, {
@@ -49,7 +48,7 @@ class ClockoutController {
 			})
 
 			return res.status(200).json({
-				// responseBody: result,
+
 				message: `แก้ไขสำเร็จ`,
 				responseCode: 200,
 			})

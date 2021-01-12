@@ -29,10 +29,5 @@ export class Clockout {
 	@Column({ name: 'Date', type: 'varchar' })
 	public Date: string
 
-	// @Index()
-	// @ManyToOne((_type) => Company, (companyId) => companyId.user, {
-	// 	nullable: true,
-	// })
-	// @JoinColumn({ name: 'companyId' })
-	// public companyId: Company
+
 }
