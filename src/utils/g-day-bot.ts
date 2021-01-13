@@ -16,14 +16,147 @@ class GDayBot {
 		const reply_token: string = req.body.events[0].replyToken
 		const reply_text: string = req.body.events[0].message.text
 		const userId = req.body.events[0].source.userId
+		const Currenttime = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
+		const Clockintime = `${new Date().toLocaleDateString()} 9:15:00`
+		const Clockintimelate = `${new Date().toLocaleDateString()} 10:00:00`
+		const Clockintimelimit = `${new Date().toLocaleDateString()} 18:00:00`
+		const Clockouttimelimit = `${new Date().toLocaleDateString()} 00:00:00`
 
 		const getUser = await getCustomRepository(UserRepository).findOne({ UserlineId: userId })
 
 		if (getUser) {
 			if (reply_text == 'Clock-in') {
-				this.ClockIn(reply_token, userId)
+				const d = new Date()
+				const date = d.toLocaleDateString()
+				const checkclockIn = await getCustomRepository(ClockinRepository).findOne({
+					lineId: userId,
+					Date: date,
+				})
+
+				if (checkclockIn) {
+					request.post({
+						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: this.TokenGDayAccess,
+						},
+						body: JSON.stringify({
+							replyToken: reply_token,
+							to: userId,
+							messages: [
+								{
+									type: 'text',
+									text: 'คุณ Clock-in ไปแล้ววันนี้งับๆ ',
+								},
+							],
+						}),
+					})
+				} else {
+					if (
+						Date.parse(Currenttime) > Date.parse(Clockintime) &&
+						Date.parse(Currenttime) < Date.parse(Clockintimelate)
+					) {
+						const statusClockin = '2'
+						this.ClockIn(reply_token, userId, statusClockin)
+					} else if (Date.parse(Currenttime) < Date.parse(Clockintime)) {
+						const statusClockin = '1'
+						this.ClockIn(reply_token, userId, statusClockin)
+					} else if (
+						Date.parse(Currenttime) > Date.parse(Clockintimelate) &&
+						Date.parse(Currenttime) < Date.parse(Clockintimelimit)
+					) {
+						request.post({
+							url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+							headers: {
+								'Content-Type': 'application/json',
+								Authorization: this.TokenGDayAccess,
+							},
+							body: JSON.stringify({
+								replyToken: reply_token,
+								to: userId,
+								messages: [
+									{
+										type: 'template',
+										altText: 'this is a buttons template',
+										template: {
+											type: 'buttons',
+											thumbnailImageUrl:
+												'https://mediacloud.kiplinger.com/image/private/s--hZBWpVc2--/v1603676868/ForgetWoman.jpg',
+											imageBackgroundColor: '#F30000',
+											title: 'Clock-In Forget',
+											text: 'You Clock-in exceeded the time limit !! ',
+											actions: [
+												{
+													type: 'message',
+													label: 'ClockIn Late',
+													text: 'ClockInLate',
+												},
+												{
+													type: 'message',
+													label: 'ClockIn Forget',
+													text: 'ClockInForget',
+												},
+											],
+										},
+									},
+								],
+							}),
+						})
+					} else if (Date.parse(Currenttime) > Date.parse(Clockintimelimit)) {
+						request.post({
+							url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+							headers: {
+								'Content-Type': 'application/json',
+								Authorization: this.TokenGDayAccess,
+							},
+							body: JSON.stringify({
+								replyToken: reply_token,
+								to: userId,
+								messages: [
+									{
+										type: 'text',
+										text: 'วันนี้หมดเวลา Clock-in แล้วเน้อออ !!',
+									},
+								],
+							}),
+						})
+					}
+				}
+			} else if (reply_text == 'ClockInLate') {
+				const statusClockin = '3'
+				this.ClockIn(reply_token, userId, statusClockin)
+			} else if (reply_text == 'ClockInForget') {
+				const statusClockin = '4'
+				this.ClockIn(reply_token, userId, statusClockin)
 			} else if (reply_text == 'Clock-out') {
-				this.ClockOut(reply_token, userId)
+				const d = new Date()
+				const date = d.toLocaleDateString()
+				const checkclockIn = await getCustomRepository(ClockinRepository).findOne({
+					lineId: userId,
+					Date: date,
+				})
+
+				if (checkclockIn) {
+					this.ClockOut(reply_token, userId)
+				} else {
+					request.post({
+						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: this.TokenGDayAccess,
+						},
+						body: JSON.stringify({
+							replyToken: reply_token,
+							to: userId,
+							messages: [
+								{
+									type: 'text',
+									text: 'กรุณาทำการ Clock-in ในวันนี้ก่อน ',
+								},
+							],
+						}),
+					})
+				}
 			} else if (reply_text == 'Request') {
 				this.Request(reply_token, userId)
 			} else if (reply_text == 'Project') {
@@ -54,7 +187,7 @@ class GDayBot {
 		return res.status(200).json({})
 	}
 
-	public ClockIn(reply_token: string, userId: string) {
+	public ClockIn(reply_token: string, userId: string, statusClockin: string) {
 		const headers = {
 			'Content-Type': 'application/json',
 			Authorization: this.TokenGDayAccess,
@@ -76,7 +209,7 @@ class GDayBot {
 							{
 								type: 'uri',
 								label: 'Go',
-								uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
+								uri: `https://nook.artisandigital.tech/Clockin?id=${userId}&&statusClockin=${statusClockin}`,
 							},
 						],
 					},
@@ -100,7 +233,6 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -173,7 +305,6 @@ class GDayBot {
 			to: userId,
 			messages: [
 				{
-
 					type: 'template',
 					altText: 'this is a buttons template',
 					template: {
@@ -240,7 +371,7 @@ class GDayBot {
 		})
 	}
 
-	event = schedule.scheduleJob('*/59 * * * *', async (line: string, TokenGDayAccess: any) => {
+	event = schedule.scheduleJob('*/60 * * * *', async (line: string, TokenGDayAccess: any) => {
 		const countlineid = await getCustomRepository(UserRepository).find({
 			select: ['UserlineId'],
 		})

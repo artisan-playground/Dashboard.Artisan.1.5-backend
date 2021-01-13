@@ -37,7 +37,7 @@ class UserController {
 					from: '"Artisan Dashboard"<bas6033@gmail.com>',
 					to: email,
 					subject: 'ยืนยัน  Email',
-					html: `<p>เรียนผู้ใช้ ${email} <br><br> <span>ไปที่ลิ้งค์นี้ยืนยันอีเมลของคุณ</span> <br><a href="https://line.me/R/ti/p/%40886oreka">คลิกที่นี่</a><br><br> <span>ขอบคุณค่ะ</span><br><span>ผู้ดูแลระบบ Artisan Dashboard</span></p>`, // plain text body
+					html: `<p>เรียนผู้ใช้ ${email} <br><br> <span>ไปที่ลิ้งค์นี้ยืนยันอีเมลของคุณ</span> <br><a href="https://line.me/R/ti/p/%40886oreka">คลิกที่นี่</a><br><br> <span>ขอบคุณค่ะ</span><br><span>ผู้ดูแลระบบ Artisan Dashboard</span></p>`,
 				})
 
 			}
