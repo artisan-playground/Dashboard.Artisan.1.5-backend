@@ -8,7 +8,6 @@ import config from './../configs/config'
 const moment = require('moment')
 const schedule = require('node-schedule')
 const rule = new schedule.RecurrenceRule()
-rule.minute = 1
 
 class GDayBot {
 	public TokenGDayAccess = config.AUTH_LINEBOT_GDAY
@@ -16,11 +15,10 @@ class GDayBot {
 		const reply_token: string = req.body.events[0].replyToken
 		const reply_text: string = req.body.events[0].message.text
 		const userId = req.body.events[0].source.userId
-		const Currenttime = `${new Date().toLocaleDateString()} ${new Date().toLocaleTimeString()}`
-		const Clockintime = `${new Date().toLocaleDateString()} 9:15:00`
-		const Clockintimelate = `${new Date().toLocaleDateString()} 10:00:00`
-		const Clockintimelimit = `${new Date().toLocaleDateString()} 18:00:00`
-		const Clockouttimelimit = `${new Date().toLocaleDateString()} 00:00:00`
+		const Currenttime = `${new Date().toDateString()} ${new Date().toTimeString()}`
+		const Clockintime = `${new Date().toDateString()} 9:15:00`
+		const Clockintimelate = `${new Date().toDateString()} 10:00:00`
+		const Clockintimelimit = `${new Date().toDateString()} 18:00:00`
 
 		const getUser = await getCustomRepository(UserRepository).findOne({ UserlineId: userId })
 
@@ -186,7 +184,95 @@ class GDayBot {
 
 		return res.status(200).json({})
 	}
+	public async Sendmassage(req: Request, res: Response) {
+		const linereq = req.body
+		const idAlert = linereq.id
+		const AlertHis = linereq.clockinHistory
 
+		if (linereq.statusClockin == '1') {
+			const textAlert = 'ยินดีด้วยงับๆๆ '
+
+			this.Alertmassage(idAlert, AlertHis, textAlert)
+		} else if (linereq.statusClockin == '2') {
+			const textAlert = 'แต่น่าเสียดาย !! '
+
+			this.Alertmassage(idAlert, AlertHis, textAlert)
+		} else if (linereq.statusClockin == '3') {
+			const textAlert = 'แต่แย่แล้ว !! '
+
+			this.Alertmassage(idAlert, AlertHis, textAlert)
+		} else if (linereq.statusClockin == '4') {
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'text',
+							text: `แต่ไม่น่าเลย !! คุณ ${AlertHis} `,
+						},
+					],
+				}),
+			})
+
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'text',
+							text: `Clock-in สำเร็จแล้ว `,
+						},
+					],
+				}),
+			})
+		}
+	}
+
+	public Alertmassage(idAlert: string, AlertHis: string, textAlert: string) {
+		request.post({
+			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: this.TokenGDayAccess,
+			},
+			body: JSON.stringify({
+				to: idAlert,
+				messages: [
+					{
+						type: 'text',
+						text: `${textAlert} คุณ Clock-in ${AlertHis} `,
+					},
+				],
+			}),
+		})
+
+		request.post({
+			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: this.TokenGDayAccess,
+			},
+			body: JSON.stringify({
+				to: idAlert,
+				messages: [
+					{
+						type: 'text',
+						text: `Clock-in สำเร็จแล้ว `,
+					},
+				],
+			}),
+		})
+	}
 	public ClockIn(reply_token: string, userId: string, statusClockin: string) {
 		const headers = {
 			'Content-Type': 'application/json',
@@ -371,7 +457,7 @@ class GDayBot {
 		})
 	}
 
-	event = schedule.scheduleJob('*/60 * * * *', async (line: string, TokenGDayAccess: any) => {
+	NotifyClockin = schedule.scheduleJob('50 8 * * *', async (line: string, TokenGDayAccess: any) => {
 		const countlineid = await getCustomRepository(UserRepository).find({
 			select: ['UserlineId'],
 		})
@@ -403,7 +489,7 @@ class GDayBot {
 							messages: [
 								{
 									type: 'text',
-									text: 'แจ้งเตือนนน',
+									text: 'อย่าลืม Clock-in เข้างานนะงับๆๆ',
 								},
 							],
 						}),
@@ -412,6 +498,47 @@ class GDayBot {
 			}
 		}
 	})
+	UsernotClockin = schedule.scheduleJob(
+		'59 17 * * *',
+		async (line: string, TokenGDayAccess: any, res: Response) => {
+			const countlineid = await getCustomRepository(UserRepository).find({
+				select: ['UserlineId'],
+			})
+
+			for (let Idline = 0; Idline < countlineid.length; Idline++) {
+				line = countlineid[Idline].UserlineId
+
+				const d = new Date()
+
+				const date = d.toLocaleDateString()
+				const time = d.toLocaleTimeString()
+				const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+					lineId: line,
+					Date: date,
+				})
+
+				if (!sendlineId) {
+					const UserAbsent = {
+						id: countlineid[Idline].UserlineId,
+						distance: 'null',
+						statusClockin: '5',
+						clockinHistory: 'ขาด การ Clock-in',
+						timeLate: 'null',
+					}
+
+					const result = await getCustomRepository(ClockinRepository).save({
+						lineId: UserAbsent.id,
+						Distance: UserAbsent.distance,
+						Time: time,
+						Date: date,
+						Clockin_status: UserAbsent.statusClockin,
+						Clockin_history: UserAbsent.clockinHistory,
+						TimeLate: UserAbsent.timeLate,
+					})
+				}
+			}
+		}
+	)
 }
 
 export const gDayBot = new GDayBot()

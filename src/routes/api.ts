@@ -6,6 +6,8 @@ import { userController } from '../controllers/UserController'
 import { gDayBot } from '../utils/g-day-bot'
 const route = Router()
 route.post('/gday-webhook', gDayBot.listenerWebHook.bind(gDayBot))
+route.post('/sendmassage', gDayBot.Sendmassage.bind(gDayBot))
+
 route.post('/checkuser', userController.ChackUser)
 
 route.post('/clockout', clockoutController.creatCO)
