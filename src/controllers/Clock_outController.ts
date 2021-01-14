@@ -8,13 +8,23 @@ import { ClockoutRepository } from '../repository/Clock_outRepository'
 class ClockoutController {
 	public async creatCO(req: Request, res: Response): Promise<Response> {
 		const clock_out: Clockout = req.body
+		const id = req.body.lineId
+		const today = req.body.Today
+		const tomorrow = req.body.Tomorrow
+		const issue = req.body.Issue
+		const projects = req.body.Projects
+		const tasks = req.body.Tasks
+
+		console.log(clock_out)
+		console.log(id)
+		console.log(today)
 
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
 
 		const getData = await getCustomRepository(ClockoutRepository).findOne({
-			lineId: clock_out.lineId,
+			lineId: id,
 			Date: date,
 		})
 
@@ -24,10 +34,10 @@ class ClockoutController {
 
 			const result = await getCustomRepository(ClockoutRepository).clockout(clock_out)
 
-			return res.status(200).json({
+			return res.status(100).json({
 				responseBody: result,
 				message: `Success`,
-				responseCode: 200,
+				responseCode: 100,
 			})
 		} else {
 			const result = await getCustomRepository(ClockoutRepository).update(getData.userId, {
