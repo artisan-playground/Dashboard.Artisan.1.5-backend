@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { User } from './User'
 
 @Entity({ name: 'request' })
 export class Requests {
@@ -20,7 +21,14 @@ export class Requests {
 	@Column({ name: 'Until', type: 'varchar' })
 	public Until: string
 
+	@Column({ name: 'CountLeanve', type: 'numeric' })
+	public CountLeanve: number
+
 	@Column({ name: 'Leaveevent', type: 'text' })
 	public Leaveevent: string
 
+	@Index()
+	@ManyToOne((_type) => User, (UserlineId) => UserlineId.requests, {})
+	@JoinColumn({ name: 'IDuserrequest' })
+	public UserlineId: User
 }
