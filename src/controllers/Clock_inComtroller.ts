@@ -9,10 +9,10 @@ class ClockinController {
 	public async creatCI(req: Request, res: Response): Promise<Response> {
 		const clock_in: Clockin = req.body
 
-		clock_in.lineId = clock_in.id
-		clock_in.Clockin_status = clock_in.statusClockin
-		clock_in.Clockin_history = clock_in.clockinHistory
-		clock_in.TimeLate = clock_in.timeLate
+		clock_in.lineId = req.body.id
+		clock_in.Clockin_status = req.body.statusClockin
+		clock_in.Clockin_history = req.body.clockinHistory
+		clock_in.TimeLate = req.body.timeLate
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
@@ -22,7 +22,7 @@ class ClockinController {
 		})
 
 		if (!getData) {
-			clock_in.Distance = clock_in.distance
+			clock_in.Distance = req.body.distance
 
 			clock_in.Time = time
 			clock_in.Date = date
