@@ -135,7 +135,28 @@ class GDayBot {
 				})
 
 				if (checkclockIn) {
-					this.ClockOut(reply_token, userId)
+					if (checkclockIn.Distance == 'null') {
+						request.post({
+							url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+							headers: {
+								'Content-Type': 'application/json',
+								Authorization: this.TokenGDayAccess,
+							},
+							body: JSON.stringify({
+								replyToken: reply_token,
+								to: userId,
+								messages: [
+									{
+										type: 'text',
+										text:
+											'วันนี้คุณได้ ขาดงาน ไปแล้ว เนื่องจากไม่ได้ทำการ Clock-in ตามเวลาที่กำหนดครับ ',
+									},
+								],
+							}),
+						})
+					} else {
+						this.ClockOut(reply_token, userId)
+					}
 				} else {
 					request.post({
 						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
@@ -194,14 +215,6 @@ class GDayBot {
 
 			this.Alertmassage(idAlert, AlertHis, textAlert)
 		} else if (linereq.statusClockin == '2') {
-			const textAlert = 'แต่น่าเสียดาย !! '
-
-			this.Alertmassage(idAlert, AlertHis, textAlert)
-		} else if (linereq.statusClockin == '3') {
-			const textAlert = 'แต่แย่แล้ว !! '
-
-			this.Alertmassage(idAlert, AlertHis, textAlert)
-		} else if (linereq.statusClockin == '4') {
 			request.post({
 				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
 				headers: {
@@ -212,8 +225,9 @@ class GDayBot {
 					to: idAlert,
 					messages: [
 						{
-							type: 'text',
-							text: `แต่ไม่น่าเลย !! คุณ ${AlertHis} `,
+							type: 'sticker',
+							packageId: '11537',
+							stickerId: '52002734',
 						},
 					],
 				}),
@@ -230,7 +244,114 @@ class GDayBot {
 					messages: [
 						{
 							type: 'text',
-							text: `Clock-in สำเร็จแล้ว `,
+							text: `Clock-in สำเร็จแล้ว แต่น่าเสียดาย !! คุณ Clock-in สายไป แต่ก็ไม่เกินเวลานะครับ`,
+						},
+					],
+				}),
+			})
+		} else if (linereq.statusClockin == '3') {
+			const textAlert = 'แต่แย่แล้ว !! '
+
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'sticker',
+							packageId: '11538',
+							stickerId: '51626522',
+						},
+					],
+				}),
+			})
+
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'text',
+							text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
+						},
+					],
+				}),
+			})
+		} else if (linereq.statusClockin == '4') {
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'sticker',
+							packageId: '11537',
+							stickerId: '52002755',
+						},
+					],
+				}),
+			})
+
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'text',
+							text: `Clock-in สำเร็จแล้ว  แต่ไม่น่าเลย !! คุณ ${AlertHis} `,
+						},
+					],
+				}),
+			})
+		} else if (linereq.clockout == 'Success') {
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'sticker',
+							packageId: '11537',
+							stickerId: '52002755',
+						},
+					],
+				}),
+			})
+
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: idAlert,
+					messages: [
+						{
+							type: 'text',
+							text: `Clock-out สำเร็จแล้ว  กลับบ้านกันนน `,
 						},
 					],
 				}),
@@ -249,8 +370,9 @@ class GDayBot {
 				to: idAlert,
 				messages: [
 					{
-						type: 'text',
-						text: `${textAlert} คุณ Clock-in ${AlertHis} `,
+						type: 'sticker',
+						packageId: '11537',
+						stickerId: '52002734',
 					},
 				],
 			}),
@@ -267,7 +389,7 @@ class GDayBot {
 				messages: [
 					{
 						type: 'text',
-						text: `Clock-in สำเร็จแล้ว `,
+						text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
 					},
 				],
 			}),
@@ -284,18 +406,21 @@ class GDayBot {
 			messages: [
 				{
 					type: 'template',
-					altText: 'this is a buttons template',
+					altText: 'this is an image carousel template',
 					template: {
-						type: 'buttons',
-						thumbnailImageUrl: 'https://www.prosoftgps.com/upload/6155/5W5b86scfv.png',
-						imageBackgroundColor: '#A9F100',
-						title: '                         Clock In !',
-						text: 'Do you want to Clockin now ? ',
-						actions: [
+						type: 'carousel',
+						imageSize: 'cover',
+						columns: [
 							{
-								type: 'uri',
-								label: 'Go',
-								uri: `https://nook.artisandigital.tech/Clockin?id=${userId}&&statusClockin=${statusClockin}`,
+								thumbnailImageUrl: 'https://www.prosoftgps.com/upload/6155/5W5b86scfv.png',
+								text: '           Do you want to clock-in  ? ',
+								actions: [
+									{
+										type: 'uri',
+										label: 'Clock-in Here !',
+										uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
+									},
+								],
 							},
 						],
 					},
@@ -320,19 +445,22 @@ class GDayBot {
 			messages: [
 				{
 					type: 'template',
-					altText: 'this is a buttons template',
+					altText: 'this is an image carousel template',
 					template: {
-						type: 'buttons',
-						thumbnailImageUrl:
-							'https://image.freepik.com/free-vector/businessman-running-exit-door-sign-he-get-off-work_115990-136.jpg',
-						imageBackgroundColor: '#A9F100',
-						title: '                         Clock Out !',
-						text: 'Do you want to ClockOut now ? ',
-						actions: [
+						type: 'carousel',
+						imageSize: 'cover',
+						columns: [
 							{
-								type: 'uri',
-								label: 'Go',
-								uri: `https://nook.artisandigital.tech/Vatsclockout?id=${userId}`,
+								thumbnailImageUrl:
+									'https://image.freepik.com/free-vector/businessman-running-exit-door-sign-he-get-off-work_115990-136.jpg',
+								text: '         Do you want to clock-out  ? ',
+								actions: [
+									{
+										type: 'uri',
+										label: 'Clock-out Here !',
+										uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
+									},
+								],
 							},
 						],
 					},
@@ -428,22 +556,22 @@ class GDayBot {
 			messages: [
 				{
 					type: 'template',
-					altText: 'this is a buttons template',
+					altText: 'this is an image carousel template',
 					template: {
-						type: 'buttons',
-						thumbnailImageUrl:
-							'https://agora.rovernet.eu/wp-content/uploads/2020/01/Registration.jpeg',
-						imageBackgroundColor: '#A9F100',
-
-						title: '                         Register !',
-						weight: 'bold',
-						size: 'xl',
-						text: 'กรุณายืนยันตัวตนในการเข้าใช้งาน ? ',
-						actions: [
+						type: 'carousel',
+						imageSize: 'cover',
+						columns: [
 							{
-								type: 'uri',
-								label: 'ยืนยัน',
-								uri: `https://nook.artisandigital.tech/Vatslogin?id=${userId}`,
+								thumbnailImageUrl:
+									'https://agora.rovernet.eu/wp-content/uploads/2020/01/Registration.jpeg',
+								text: '        Press the button to Register !',
+								actions: [
+									{
+										type: 'uri',
+										label: 'Register Now !',
+										uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
+									},
+								],
 							},
 						],
 					},
