@@ -9,9 +9,7 @@ class RequestController {
 	public async creatReq(req: Request, res: Response): Promise<Response> {
 		const requests: Requests = req.body
 
-
 		const result = await getCustomRepository(RequestRepository).clockreq(requests)
-
 
 		if (result) {
 			return res.status(200).json({
@@ -26,6 +24,15 @@ class RequestController {
 				responseCode: 401,
 			})
 		}
+	}
+	public async gatdataRequset(req: Request, res: Response): Promise<Response> {
+		const requests: Requests = req.body
+
+		const result = await getCustomRepository(RequestRepository).getdataRequset(requests)
+
+		return res.status(200).json({
+			result,
+		})
 	}
 }
 export const requestController = new RequestController()
