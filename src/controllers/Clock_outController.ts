@@ -30,10 +30,10 @@ class ClockoutController {
 
 			const result = await getCustomRepository(ClockoutRepository).clockout(clock_out)
 
-			return res.status(100).json({
+			return res.status(200).json({
 				responseBody: result,
-				message: `Success`,
-				responseCode: 100,
+				message: `บันทึกสำเร็จ`,
+				responseCode: 200,
 			})
 		} else {
 			const result = await getCustomRepository(ClockoutRepository).update(getData.userId, {
