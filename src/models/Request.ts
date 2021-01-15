@@ -4,7 +4,7 @@ import { User } from './User'
 @Entity({ name: 'request' })
 export class Requests {
 	@PrimaryGeneratedColumn({ name: 'requestId' })
-	public userId: number
+	public requestId: number
 
 	@Column({ name: 'lineId', type: 'varchar' })
 	public lineId: string
@@ -28,7 +28,7 @@ export class Requests {
 	public Leaveevent: string
 
 	@Index()
-	@ManyToOne((_type) => User, (UserlineId) => UserlineId.requests, {})
+	@ManyToOne((_type) => User, (userId) => userId.requests, {})
 	@JoinColumn({ name: 'IDuserrequest' })
-	public UserlineId: User
+	public userId: User
 }
