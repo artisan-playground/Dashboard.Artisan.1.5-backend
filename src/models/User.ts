@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 import { Clockin } from './Clock-in'
-import { Requests } from './request'
+import { Requests } from './Request'
 
 @Entity({ name: 'user' })
 export class User {
@@ -19,6 +19,6 @@ export class User {
 	@OneToMany((_type) => Clockin, (clockin) => clockin.userId)
 	public clockin: Clockin[]
 
-	@OneToMany((_type) => Requests, (requests) => requests.userId)
+	@OneToMany((_type) => Requests, (requests) => requests.requestId)
 	public requests: Requests[]
 }

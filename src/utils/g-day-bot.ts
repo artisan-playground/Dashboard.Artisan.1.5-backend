@@ -418,7 +418,7 @@ class GDayBot {
 									{
 										type: 'uri',
 										label: 'Clock-in Here !',
-										uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
+										uri: `https://dashboard-web-15-dev.artisandigital.xyz/Clockin?id=${userId}&&statusClockin=${statusClockin}`,
 									},
 								],
 							},
@@ -458,7 +458,7 @@ class GDayBot {
 									{
 										type: 'uri',
 										label: 'Clock-out Here !',
-										uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
+										uri: `https://dashboard-web-15-dev.artisandigital.xyz/Clockout?id=${userId}`,
 									},
 								],
 							},
@@ -569,7 +569,7 @@ class GDayBot {
 									{
 										type: 'uri',
 										label: 'Register Now !',
-										uri: `https://nook.artisandigital.tech/Clockin?id=${userId}`,
+										uri: `https://dashboard-web-15-dev.artisandigital.xyz/Vatslogin?id=${userId}`,
 									},
 								],
 							},

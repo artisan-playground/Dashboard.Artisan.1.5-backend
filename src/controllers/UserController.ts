@@ -6,13 +6,11 @@ import { UserRepository } from '../repository/UserRepository'
 
 @Advised()
 class UserController {
-
 	public async ChackUser(req: Request, res: Response): Promise<Response> {
 		const user: User = req.body
 		user.status = 1
 
 		const getemail = await getCustomRepository(UserRepository).findOne({ username: user.username })
-
 
 		if (getemail) {
 			;('use strict')
@@ -21,13 +19,11 @@ class UserController {
 			const email = user.username
 
 			async function main() {
-
 				let transporter = nodemailer.createTransport({
 					host: 'smtp.gmail.com',
 					port: 587,
 					secure: false,
 					auth: {
-
 						user: 'bas6033@gmail.com',
 						pass: 'bas079354847',
 					},
@@ -39,7 +35,6 @@ class UserController {
 					subject: 'ยืนยัน  Email',
 					html: `<p>เรียนผู้ใช้ ${email} <br><br> <span>ไปที่ลิ้งค์นี้ยืนยันอีเมลของคุณ</span> <br><a href="https://line.me/R/ti/p/%40886oreka">คลิกที่นี่</a><br><br> <span>ขอบคุณค่ะ</span><br><span>ผู้ดูแลระบบ Artisan Dashboard</span></p>`,
 				})
-
 			}
 			main().catch(console.error)
 
@@ -53,16 +48,12 @@ class UserController {
 				responseCode: 200,
 			})
 		} else {
-			console.log('ไม่อีเมล')
-
 			return res.status(200).json({
 				responseBody: getemail,
 				message: `send Email fail`,
 				responseCode: 401,
 			})
 		}
-
-
 	}
 }
 

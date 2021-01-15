@@ -15,10 +15,6 @@ class ClockoutController {
 		const projects = req.body.Projects
 		const tasks = req.body.Tasks
 
-		console.log(clock_out)
-		console.log(id)
-		console.log(today)
-
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
