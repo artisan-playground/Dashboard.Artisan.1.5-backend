@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import request from 'request'
 import { getCustomRepository } from 'typeorm'
 import { ClockinRepository } from '../repository/Clock_inRepository'
+import { ClockoutRepository } from '../repository/Clock_outRepository'
 import { UserRepository } from '../repository/UserRepository'
 import config from './../configs/config'
 
@@ -322,40 +323,84 @@ class GDayBot {
 				}),
 			})
 		} else if (linereq.clockout == 'Success') {
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'sticker',
-							packageId: '11537',
-							stickerId: '52002755',
-						},
-					],
-				}),
+			const d = new Date()
+			const date = d.toLocaleDateString()
+			const checkclockout = await getCustomRepository(ClockoutRepository).findOne({
+				lineId: idAlert,
+				Date: date,
 			})
 
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-out สำเร็จแล้ว  กลับบ้านกันนน `,
-						},
-					],
-				}),
-			})
+			if (checkclockout) {
+				request.post({
+					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: this.TokenGDayAccess,
+					},
+					body: JSON.stringify({
+						to: idAlert,
+						messages: [
+							{
+								type: 'sticker',
+								packageId: '11537',
+								stickerId: '52002755',
+							},
+						],
+					}),
+				})
+
+				request.post({
+					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: this.TokenGDayAccess,
+					},
+					body: JSON.stringify({
+						to: idAlert,
+						messages: [
+							{
+								type: 'text',
+								text: ` แก้ไขการ Clock-out สำเร็จแล้วครับ `,
+							},
+						],
+					}),
+				})
+			} else {
+				request.post({
+					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: this.TokenGDayAccess,
+					},
+					body: JSON.stringify({
+						to: idAlert,
+						messages: [
+							{
+								type: 'sticker',
+								packageId: '11537',
+								stickerId: '52002755',
+							},
+						],
+					}),
+				})
+
+				request.post({
+					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: this.TokenGDayAccess,
+					},
+					body: JSON.stringify({
+						to: idAlert,
+						messages: [
+							{
+								type: 'text',
+								text: `Clock-out สำเร็จแล้วงับๆๆ `,
+							},
+						],
+					}),
+				})
+			}
 		}
 	}
 
@@ -458,7 +503,7 @@ class GDayBot {
 									{
 										type: 'uri',
 										label: 'Clock-out Here !',
-										uri: `https://dashboard-web-15-dev.artisandigital.xyz/Clockout?id=${userId}`,
+										uri: `https://dashboard-web-15-dev.artisandigital.xyz/Vatsclockout?id=${userId}`,
 									},
 								],
 							},
