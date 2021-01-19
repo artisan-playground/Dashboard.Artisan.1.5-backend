@@ -237,7 +237,7 @@ class Replybot {
 						messages: [
 							{
 								type: 'text',
-								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับ `,
+								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับๆ `,
 							},
 						],
 					}),
