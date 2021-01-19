@@ -19,7 +19,7 @@ export class User {
 	public Onleave: number
 
 	@Column({ name: 'status', type: 'varchar' })
-	public status: number
+	public status: string
 
 	@OneToMany((_type) => Clockin, (clockin) => clockin.userId)
 	public clockin: Clockin[]

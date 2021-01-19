@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import request from 'request'
 import { getCustomRepository } from 'typeorm'
 import { ClockinRepository } from '../repository/Clock_inRepository'
-import { ClockoutRepository } from '../repository/Clock_outRepository'
 import { UserRepository } from '../repository/UserRepository'
 import config from './../configs/config'
 
@@ -22,7 +21,7 @@ class GDayBot {
 		const Clockintimelimit = `${new Date().toDateString()} 18:00:00`
 
 		const getUser = await getCustomRepository(UserRepository).findOne({ UserlineId: userId })
-
+		console.log(getUser)
 		if (getUser) {
 			if (reply_text == 'Clock-in') {
 				const d = new Date()
@@ -178,7 +177,12 @@ class GDayBot {
 					})
 				}
 			} else if (reply_text == 'Request') {
-				this.Request(reply_token, userId)
+				if (getUser.status == 'admin') {
+
+					this.Request(reply_token, userId)
+				} else if (getUser.status == 'user') {
+
+				}
 			} else if (reply_text == 'Project') {
 				this.Project(reply_token, userId)
 			} else {
@@ -206,240 +210,7 @@ class GDayBot {
 
 		return res.status(200).json({})
 	}
-	public async Sendmassage(req: Request, res: Response) {
-		const linereq = req.body
-		const idAlert = linereq.id
-		const AlertHis = linereq.clockinHistory
 
-		if (linereq.statusClockin == '1') {
-			const textAlert = 'ยินดีด้วยงับๆๆ '
-
-			this.Alertmassage(idAlert, AlertHis, textAlert)
-		} else if (linereq.statusClockin == '2') {
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'sticker',
-							packageId: '11537',
-							stickerId: '52002734',
-						},
-					],
-				}),
-			})
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-in สำเร็จแล้ว แต่น่าเสียดาย !! คุณ Clock-in สายไป แต่ก็ไม่เกินเวลานะครับ`,
-						},
-					],
-				}),
-			})
-		} else if (linereq.statusClockin == '3') {
-			const textAlert = 'แต่แย่แล้ว !! '
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'sticker',
-							packageId: '11538',
-							stickerId: '51626522',
-						},
-					],
-				}),
-			})
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
-						},
-					],
-				}),
-			})
-		} else if (linereq.statusClockin == '4') {
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'sticker',
-							packageId: '11537',
-							stickerId: '52002755',
-						},
-					],
-				}),
-			})
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: this.TokenGDayAccess,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-in สำเร็จแล้ว  แต่ไม่น่าเลย !! คุณ ${AlertHis} `,
-						},
-					],
-				}),
-			})
-		} else if (linereq.clockout == 'Success') {
-			const d = new Date()
-			const date = d.toLocaleDateString()
-			const checkclockout = await getCustomRepository(ClockoutRepository).findOne({
-				lineId: idAlert,
-				Date: date,
-			})
-
-			if (checkclockout) {
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: this.TokenGDayAccess,
-					},
-					body: JSON.stringify({
-						to: idAlert,
-						messages: [
-							{
-								type: 'sticker',
-								packageId: '11537',
-								stickerId: '52002755',
-							},
-						],
-					}),
-				})
-
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: this.TokenGDayAccess,
-					},
-					body: JSON.stringify({
-						to: idAlert,
-						messages: [
-							{
-								type: 'text',
-								text: ` แก้ไขการ Clock-out สำเร็จแล้วครับ `,
-							},
-						],
-					}),
-				})
-			} else {
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: this.TokenGDayAccess,
-					},
-					body: JSON.stringify({
-						to: idAlert,
-						messages: [
-							{
-								type: 'sticker',
-								packageId: '11537',
-								stickerId: '52002755',
-							},
-						],
-					}),
-				})
-
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: this.TokenGDayAccess,
-					},
-					body: JSON.stringify({
-						to: idAlert,
-						messages: [
-							{
-								type: 'text',
-								text: `Clock-out สำเร็จแล้วงับๆๆ `,
-							},
-						],
-					}),
-				})
-			}
-		}
-	}
-
-	public Alertmassage(idAlert: string, AlertHis: string, textAlert: string) {
-		request.post({
-			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: this.TokenGDayAccess,
-			},
-			body: JSON.stringify({
-				to: idAlert,
-				messages: [
-					{
-						type: 'sticker',
-						packageId: '11537',
-						stickerId: '52002734',
-					},
-				],
-			}),
-		})
-
-		request.post({
-			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: this.TokenGDayAccess,
-			},
-			body: JSON.stringify({
-				to: idAlert,
-				messages: [
-					{
-						type: 'text',
-						text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
-					},
-				],
-			}),
-		})
-	}
 	public ClockIn(reply_token: string, userId: string, statusClockin: string) {
 		const headers = {
 			'Content-Type': 'application/json',
@@ -629,89 +400,6 @@ class GDayBot {
 			body: body,
 		})
 	}
-
-	NotifyClockin = schedule.scheduleJob('50 8 * * *', async (line: string, TokenGDayAccess: any) => {
-		const countlineid = await getCustomRepository(UserRepository).find({
-			select: ['UserlineId'],
-		})
-
-		for (let Idline = 0; Idline < countlineid.length; Idline++) {
-			line = countlineid[Idline].UserlineId
-
-			const d = new Date()
-
-			const date = d.toLocaleDateString()
-
-			const sendlineId = await getCustomRepository(ClockinRepository).findOne({
-				lineId: line,
-				Date: date,
-			})
-
-			if (!sendlineId) {
-				TokenGDayAccess = config.AUTH_LINEBOT_GDAY
-
-				try {
-					request.post({
-						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization: this.TokenGDayAccess,
-						},
-						body: JSON.stringify({
-							to: line,
-							messages: [
-								{
-									type: 'text',
-									text: 'อย่าลืม Clock-in เข้างานนะงับๆๆ',
-								},
-							],
-						}),
-					})
-				} catch (e) {}
-			}
-		}
-	})
-	UsernotClockin = schedule.scheduleJob(
-		'59 17 * * *',
-		async (line: string, TokenGDayAccess: any, res: Response) => {
-			const countlineid = await getCustomRepository(UserRepository).find({
-				select: ['UserlineId'],
-			})
-
-			for (let Idline = 0; Idline < countlineid.length; Idline++) {
-				line = countlineid[Idline].UserlineId
-
-				const d = new Date()
-
-				const date = d.toLocaleDateString()
-				const time = d.toLocaleTimeString()
-				const sendlineId = await getCustomRepository(ClockinRepository).findOne({
-					lineId: line,
-					Date: date,
-				})
-
-				if (!sendlineId) {
-					const UserAbsent = {
-						id: countlineid[Idline].UserlineId,
-						distance: 'null',
-						statusClockin: '5',
-						clockinHistory: 'ขาด การ Clock-in',
-						timeLate: 'null',
-					}
-
-					const result = await getCustomRepository(ClockinRepository).save({
-						lineId: UserAbsent.id,
-						Distance: UserAbsent.distance,
-						Time: time,
-						Date: date,
-						Clockin_status: UserAbsent.statusClockin,
-						Clockin_history: UserAbsent.clockinHistory,
-						TimeLate: UserAbsent.timeLate,
-					})
-				}
-			}
-		}
-	)
 }
 
 export const gDayBot = new GDayBot()
