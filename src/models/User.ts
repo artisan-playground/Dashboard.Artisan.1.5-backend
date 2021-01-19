@@ -15,6 +15,7 @@ export class User {
 
 	@Column({ name: 'Sickleave', type: 'int' })
 	public Sickleave: number
+
 	@Column({ name: 'Onleave', type: 'int' })
 	public Onleave: number
 
