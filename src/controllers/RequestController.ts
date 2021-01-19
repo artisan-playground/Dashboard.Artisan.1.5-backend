@@ -3,6 +3,8 @@ import { Request, Response } from 'express'
 import { getCustomRepository } from 'typeorm'
 import { Requests } from '../models/Request'
 import { RequestRepository } from '../repository/RequestRepository'
+import { UserRepository } from '../repository/UserRepository'
+
 const fs = require('fs')
 const { google } = require('googleapis')
 let rawdata = fs.readFileSync('dashboard.json')
@@ -10,24 +12,54 @@ let keyCalendar = JSON.parse(rawdata)
 
 @Advised()
 class RequestController {
-	public async creatReq(req: Request, res: Response): Promise<Response> {
+	public async creatReq(req: Request, res: Response) {
 		const requests: Requests = req.body
+		const id = requests.lineId
+		const countLeave = requests.CountLeave
 
 
-		const result = await getCustomRepository(RequestRepository).clockreq(requests)
 
-		if (result) {
-			return res.status(200).json({
-				responseBody: result,
-				message: `success`,
-				responseCode: 200,
+		if (requests.Leavetype == 'ลาป่วย') {
+			const getrequest = await getCustomRepository(UserRepository).findOne({
+				UserlineId: id,
 			})
-		} else {
-			return res.status(200).json({
-				responseBody: result,
-				message: `fail`,
-				responseCode: 401,
-			})
+
+			if (typeof getrequest?.Sickleave === 'number') {
+				const countDB: number = getrequest?.Sickleave
+
+				if (countDB != 0 && countDB >= countLeave) {
+					const remain = countDB - countLeave
+
+					const Editresult = await getCustomRepository(UserRepository).update(getrequest?.userId, {
+						Sickleave: remain,
+					})
+
+					if (Editresult) {
+						const reqsuccess = await getCustomRepository(UserRepository).findOne({
+							userId: getrequest?.userId,
+						})
+					}
+
+					const result = await getCustomRepository(RequestRepository).clockreq(requests)
+
+					if (result) {
+						return res.status(200).json({
+							responseBody: result,
+							message: `success`,
+							responseCode: 200,
+						})
+					} else {
+						return res.status(200).json({
+							responseBody: result,
+							message: `fail`,
+							responseCode: 401,
+						})
+					}
+				} else {
+
+				}
+			}
+		} else if (requests.Leavetype == 'ลากิจ') {
 		}
 	}
 	public async gatdataRequset(req: Request, res: Response): Promise<Response> {
@@ -71,7 +103,6 @@ class RequestController {
 			timeZone: 'Asia/Bangkok',
 			singleEvents: true,
 			orderBy: 'startTime',
-			maxResults: 5,
 		})
 		const result = response.data.items
 

@@ -8,23 +8,17 @@ export class UserRepository extends Repository<User> {
 		return result
 	}
 
-	public async creater(user: User): Promise<User | undefined> {
-		const dbdata = await getCustomRepository(UserRepository)
-			.createQueryBuilder('user')
-			.where('user.username =:username', {
-				UserlineId: user.UserlineId,
+	public async Edit(userid: string, remain: number) {
+		const Editresult = await getCustomRepository(UserRepository).update(userid, {
+			Sickleave: remain,
+		})
 
-			})
-			.getOne()
-
-		return dbdata
+		return Editresult
 	}
 	public async getlineId(user: User): Promise<User | undefined> {
 		const result = await getCustomRepository(UserRepository)
 			.createQueryBuilder('user')
-			.where('UserlineId: user.UserlineId ', {
-
-			})
+			.where('UserlineId: user.UserlineId ', {})
 			.getOne()
 
 		return result

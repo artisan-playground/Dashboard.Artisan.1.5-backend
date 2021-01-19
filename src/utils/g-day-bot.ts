@@ -21,7 +21,7 @@ class GDayBot {
 		const Clockintimelimit = `${new Date().toDateString()} 18:00:00`
 
 		const getUser = await getCustomRepository(UserRepository).findOne({ UserlineId: userId })
-		console.log(getUser)
+
 		if (getUser) {
 			if (reply_text == 'Clock-in') {
 				const d = new Date()
