@@ -13,8 +13,14 @@ export class User {
 	@Column({ name: 'UserlineId', type: 'varchar' })
 	public UserlineId: string
 
-	@Column({ name: 'status', type: 'int' })
-	public status: number
+	@Column({ name: 'Sickleave', type: 'int' })
+	public Sickleave: number
+
+	@Column({ name: 'Onleave', type: 'int' })
+	public Onleave: number
+
+	@Column({ name: 'status', type: 'varchar' })
+	public status: string
 
 	@OneToMany((_type) => Clockin, (clockin) => clockin.userId)
 	public clockin: Clockin[]

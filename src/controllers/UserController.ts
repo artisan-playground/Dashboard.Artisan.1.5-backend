@@ -8,7 +8,7 @@ import { UserRepository } from '../repository/UserRepository'
 class UserController {
 	public async ChackUser(req: Request, res: Response): Promise<Response> {
 		const user: User = req.body
-		user.status = 1
+
 
 		const getemail = await getCustomRepository(UserRepository).findOne({ username: user.username })
 
