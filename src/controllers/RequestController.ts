@@ -4,6 +4,7 @@ import { getCustomRepository } from 'typeorm'
 import { Requests } from '../models/Request'
 import { RequestRepository } from '../repository/RequestRepository'
 import { UserRepository } from '../repository/UserRepository'
+import { replybot } from '../utils/g-day-pushmassage'
 
 const fs = require('fs')
 const { google } = require('googleapis')
@@ -16,8 +17,6 @@ class RequestController {
 		const requests: Requests = req.body
 		const id = requests.lineId
 		const countLeave = requests.CountLeave
-
-
 
 		if (requests.Leavetype == 'ลาป่วย') {
 			const getrequest = await getCustomRepository(UserRepository).findOne({
@@ -38,28 +37,75 @@ class RequestController {
 						const reqsuccess = await getCustomRepository(UserRepository).findOne({
 							userId: getrequest?.userId,
 						})
+
+						if (typeof reqsuccess?.UserlineId === 'string') {
+							const id: string = reqsuccess?.UserlineId
+							const leavetype = requests.Leavetype
+							const leavecount = reqsuccess?.Sickleave
+
+							replybot.RequestNotify(id, leavetype, leavecount)
+						}
 					}
 
 					const result = await getCustomRepository(RequestRepository).clockreq(requests)
-
-					if (result) {
-						return res.status(200).json({
-							responseBody: result,
-							message: `success`,
-							responseCode: 200,
-						})
-					} else {
-						return res.status(200).json({
-							responseBody: result,
-							message: `fail`,
-							responseCode: 401,
-						})
-					}
 				} else {
+					const reqfail = await getCustomRepository(UserRepository).findOne({
+						userId: getrequest?.userId,
+					})
 
+					if (typeof reqfail?.UserlineId === 'string') {
+						const id: string = reqfail?.UserlineId
+						const leavetype = 'Fail'
+						const leavecount = reqfail?.Sickleave
+
+						replybot.RequestNotify(id, leavetype, leavecount)
+					}
 				}
 			}
 		} else if (requests.Leavetype == 'ลากิจ') {
+			const getrequest = await getCustomRepository(UserRepository).findOne({
+				UserlineId: id,
+			})
+
+			if (typeof getrequest?.Onleave === 'number') {
+				const countDB: number = getrequest?.Onleave
+
+				if (countDB != 0 && countDB >= countLeave) {
+					const remain = countDB - countLeave
+
+					const Editresult = await getCustomRepository(UserRepository).update(getrequest?.userId, {
+						Onleave: remain,
+					})
+
+					if (Editresult) {
+						const reqsuccess = await getCustomRepository(UserRepository).findOne({
+							userId: getrequest?.userId,
+						})
+
+						if (typeof reqsuccess?.UserlineId === 'string') {
+							const id: string = reqsuccess?.UserlineId
+							const leavetype = requests.Leavetype
+							const leavecount = reqsuccess?.Onleave
+
+							replybot.RequestNotify(id, leavetype, leavecount)
+						}
+					}
+
+					const result = await getCustomRepository(RequestRepository).clockreq(requests)
+				} else {
+					const reqfail = await getCustomRepository(UserRepository).findOne({
+						userId: getrequest?.userId,
+					})
+
+					if (typeof reqfail?.UserlineId === 'string') {
+						const id: string = reqfail?.UserlineId
+						const leavetype = 'Fail'
+						const leavecount = reqfail?.Onleave
+
+						replybot.RequestNotify(id, leavetype, leavecount)
+					}
+				}
+			}
 		}
 	}
 	public async gatdataRequset(req: Request, res: Response): Promise<Response> {
