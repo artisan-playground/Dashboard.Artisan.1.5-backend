@@ -16,7 +16,6 @@ class Replybot {
 		const idAlert = linereq.id
 		const AlertHis = linereq.clockinHistory
 
-
 		if (linereq.statusClockin == '1') {
 			const textAlert = 'ยินดีด้วยงับๆๆ '
 
@@ -238,7 +237,7 @@ class Replybot {
 						messages: [
 							{
 								type: 'text',
-								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับ `,
+								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับๆ `,
 							},
 						],
 					}),
@@ -247,16 +246,27 @@ class Replybot {
 		}
 	}
 
-	public async RequestNotify(req: Request, res: Response) {
+	public async RequestNotify(req: Request, res: Response, reqsuccess: object) {
+		const Token = config.AUTH_LINEBOT_GDAY
 		const request = req.body
+		const id = request.lineId
 
-
-		if (request.Leavetype == 'ลาป่วย') {
-
-
-		} else if (request.Leavetype == 'ลากิจ') {
-
-		}
+		request.post({
+			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: Token,
+			},
+			body: JSON.stringify({
+				to: id,
+				messages: [
+					{
+						type: 'text',
+						text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับ `,
+					},
+				],
+			}),
+		})
 	}
 
 	public TokenGDayAccess = config.AUTH_LINEBOT_GDAY
@@ -264,7 +274,6 @@ class Replybot {
 		const countlineid = await getCustomRepository(UserRepository).find({
 			select: ['UserlineId'],
 		})
-
 
 		for (let Idline = 0; Idline < countlineid.length; Idline++) {
 			line = countlineid[Idline].UserlineId

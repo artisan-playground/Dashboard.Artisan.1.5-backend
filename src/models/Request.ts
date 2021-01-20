@@ -22,7 +22,7 @@ export class Requests {
 	public Until: string
 
 	@Column({ name: 'CountLeave', type: 'int' })
-	public CountLeanve: number
+	public CountLeave: number
 
 	@Column({ name: 'Leaveevent', type: 'text' })
 	public Leaveevent: string
