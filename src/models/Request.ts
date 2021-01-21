@@ -21,7 +21,7 @@ export class Requests {
 	@Column({ name: 'Until', type: 'varchar' })
 	public Until: string
 
-	@Column({ name: 'CountLeave', type: 'int' })
+	@Column({ name: 'CountLeave', type: 'float' })
 	public CountLeave: number
 
 	@Column({ name: 'Leaveevent', type: 'text' })
