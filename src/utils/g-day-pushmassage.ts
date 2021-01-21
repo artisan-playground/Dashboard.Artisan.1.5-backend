@@ -246,27 +246,65 @@ class Replybot {
 		}
 	}
 
-	public async RequestNotify(req: Request, res: Response, reqsuccess: object) {
+	public async RequestNotify(id: string, leavetype: string, leavecount: number) {
 		const Token = config.AUTH_LINEBOT_GDAY
-		const request = req.body
-		const id = request.lineId
 
-		request.post({
-			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: Token,
-			},
-			body: JSON.stringify({
-				to: id,
-				messages: [
-					{
-						type: 'text',
-						text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับ `,
-					},
-				],
-			}),
-		})
+		if (leavetype == 'ลาป่วย') {
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: Token,
+				},
+				body: JSON.stringify({
+					to: id,
+					messages: [
+						{
+							type: 'text',
+							text: `คุณได้ทำการ ลาป่วยสำเร็จแล้ว หายไวๆนะครับ `,
+						},
+					],
+				}),
+			})
+		} else if (leavetype == 'ลากิจ') {
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: Token,
+				},
+				body: JSON.stringify({
+					to: id,
+					messages: [
+						{
+							type: 'text',
+							text: `คุณได้ทำการ ลากิจสำเร็จแล้ว ขอให้เดินทางไปทำธุระปลอดภัยนะครับ `,
+						},
+					],
+				}),
+			})
+		} else if (leavetype == 'Fail') {
+			const ckeckfail = await getCustomRepository(UserRepository).findOne({
+				UserlineId: id,
+			})
+
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: Token,
+				},
+				body: JSON.stringify({
+					to: id,
+					messages: [
+						{
+							type: 'text',
+							text: `คำร้องขอการลาของคุณล้มเหลว !!! เนื่องจากจำนวนวันการลาของคุณไม่เพียงพอ #จำนวนวันลาคงเหลือ ลาป่วย : ${ckeckfail?.Sickleave} วัน , ลากิจ :  ${ckeckfail?.Onleave} วัน   `,
+						},
+					],
+				}),
+			})
+		}
 	}
 
 	public TokenGDayAccess = config.AUTH_LINEBOT_GDAY

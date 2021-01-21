@@ -9,7 +9,7 @@ import { replybot } from '../utils/g-day-pushmassage'
 const route = Router()
 route.post('/gday-webhook', gDayBot.listenerWebHook.bind(gDayBot))
 route.post('/sendmassage', replybot.Sendmassage)
-route.post('/requestNotify', replybot.RequestNotify)
+// route.post('/requestNotify', replybot.RequestNotify)
 route.post('/checkuser', userController.ChackUser)
 route.post('/getrequest', requestController.gatdataRequset)
 route.post('/getEvents', requestController.getEvents)
