@@ -86,13 +86,13 @@ class GDayBot {
 											actions: [
 												{
 													type: 'message',
-													label: 'ClockIn Late',
-													text: 'ClockInLate',
+													label: 'Clock-In Late',
+													text: 'Clock-InLate',
 												},
 												{
 													type: 'message',
-													label: 'ClockIn Forget',
-													text: 'ClockInForget',
+													label: 'Clock-In Forget',
+													text: 'Clock-In Forget',
 												},
 											],
 										},
@@ -177,11 +177,12 @@ class GDayBot {
 					})
 				}
 			} else if (reply_text == 'Request') {
-				if (getUser.status == 'admin') {
-
-					this.Request(reply_token, userId)
-				} else if (getUser.status == 'user') {
-
+				if (getUser?.status == 'admin') {
+					const status = '1'
+					this.Request(reply_token, userId, status)
+				} else {
+					const status = '2'
+					this.Request(reply_token, userId, status)
 				}
 			} else if (reply_text == 'Project') {
 				this.Project(reply_token, userId)
@@ -289,7 +290,7 @@ class GDayBot {
 			body: body,
 		})
 	}
-	public Request(reply_token: string, userId: string) {
+	public Request(reply_token: string, userId: string, status: string) {
 		const headers = {
 			'Content-Type': 'application/json',
 			Authorization: this.TokenGDayAccess,
@@ -312,7 +313,7 @@ class GDayBot {
 							{
 								type: 'uri',
 								label: 'Go',
-								uri: `https://nook.artisandigital.tech/Vleaveform?id=${userId}`,
+								uri: `https://dashboard-web-15-dev.artisandigital.xyz/Vleaveform?id=${userId}&&status=${status}`,
 							},
 						],
 					},
