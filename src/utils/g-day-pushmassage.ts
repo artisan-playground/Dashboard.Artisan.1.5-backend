@@ -3,6 +3,7 @@ import request from 'request'
 import { getCustomRepository } from 'typeorm'
 import { ClockinRepository } from '../repository/Clock_inRepository'
 import { ClockoutRepository } from '../repository/Clock_outRepository'
+import { RequestRepository } from '../repository/RequestRepository'
 import { UserRepository } from '../repository/UserRepository'
 import config from './../configs/config'
 
@@ -317,37 +318,54 @@ class Replybot {
 			line = countlineid[Idline].UserlineId
 
 			const d = new Date()
+			const datelocale = d.toLocaleDateString()
+			const date = d.toDateString()
+			const datenow = Date.parse(date)
 
-			const date = d.toLocaleDateString()
-
-			const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+			const leave = await getCustomRepository(RequestRepository).find({
 				lineId: line,
-				Date: date,
 			})
 
-			if (!sendlineId) {
-				TokenGDayAccess = config.AUTH_LINEBOT_GDAY
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: this.TokenGDayAccess,
-					},
-					body: JSON.stringify({
-						to: line,
-						messages: [
-							{
-								type: 'image',
-								originalContentUrl:
-									'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
-								previewImageUrl:
-									'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
-							},
-						],
-					}),
-				})
+			if (leave) {
+				const checkreq = []
+				for (let countleave = 0; countleave < leave.length; countleave++) {
+					const since = leave[countleave].Since
+					const untill = leave[countleave].Until
 
-				try {
+					const sinceChangetoDate = new Date(since)
+					const untillChangetoDate = new Date(untill)
+
+					const dateuntill = Date.parse(untill)
+					const datesince = Date.parse(since)
+					if (datesince <= datenow && datenow <= dateuntill) {
+						checkreq.push('found')
+					} else {
+						checkreq.push('notfound')
+					}
+				}
+
+				if (checkreq.includes('found')) {
+					TokenGDayAccess = config.AUTH_LINEBOT_GDAY
+					request.post({
+						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: this.TokenGDayAccess,
+						},
+						body: JSON.stringify({
+							to: line,
+							messages: [
+								{
+									type: 'image',
+									originalContentUrl:
+										'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
+									previewImageUrl:
+										'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
+								},
+							],
+						}),
+					})
+
 					request.post({
 						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
 						headers: {
@@ -359,12 +377,106 @@ class Replybot {
 							messages: [
 								{
 									type: 'text',
-									text: 'อย่าลืม Clock-in เข้างานนะคะ',
+									text: 'อรุณสวัสดิ์รีบมาทำงานนะครับ',
 								},
 							],
 						}),
 					})
-				} catch (e) {}
+				} else {
+					const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+						lineId: line,
+						Date: datelocale,
+					})
+
+					if (!sendlineId) {
+						TokenGDayAccess = config.AUTH_LINEBOT_GDAY
+						request.post({
+							url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+							headers: {
+								'Content-Type': 'application/json',
+								Authorization: this.TokenGDayAccess,
+							},
+							body: JSON.stringify({
+								to: line,
+								messages: [
+									{
+										type: 'image',
+										originalContentUrl:
+											'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
+										previewImageUrl:
+											'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
+									},
+								],
+							}),
+						})
+
+						try {
+							request.post({
+								url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+								headers: {
+									'Content-Type': 'application/json',
+									Authorization: this.TokenGDayAccess,
+								},
+								body: JSON.stringify({
+									to: line,
+									messages: [
+										{
+											type: 'text',
+											text: 'อย่าลืม Clock-in เข้างานนะคะ',
+										},
+									],
+								}),
+							})
+						} catch (e) {}
+					}
+				}
+			} else {
+				const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+					lineId: line,
+					Date: datelocale,
+				})
+
+				if (!sendlineId) {
+					TokenGDayAccess = config.AUTH_LINEBOT_GDAY
+					request.post({
+						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization: this.TokenGDayAccess,
+						},
+						body: JSON.stringify({
+							to: line,
+							messages: [
+								{
+									type: 'image',
+									originalContentUrl:
+										'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
+									previewImageUrl:
+										'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
+								},
+							],
+						}),
+					})
+
+					try {
+						request.post({
+							url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+							headers: {
+								'Content-Type': 'application/json',
+								Authorization: this.TokenGDayAccess,
+							},
+							body: JSON.stringify({
+								to: line,
+								messages: [
+									{
+										type: 'text',
+										text: 'อย่าลืม Clock-in เข้างานนะคะ',
+									},
+								],
+							}),
+						})
+					} catch (e) {}
+				}
 			}
 		}
 	})
@@ -383,6 +495,7 @@ class Replybot {
 
 				const date = d.toLocaleDateString()
 				const time = d.toLocaleTimeString()
+
 				const sendlineId = await getCustomRepository(ClockinRepository).findOne({
 					lineId: line,
 					Date: date,

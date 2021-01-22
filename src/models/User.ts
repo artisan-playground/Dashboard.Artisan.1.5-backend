@@ -13,10 +13,10 @@ export class User {
 	@Column({ name: 'UserlineId', type: 'varchar' })
 	public UserlineId: string
 
-	@Column({ name: 'Sickleave', type: 'int' })
+	@Column({ name: 'Sickleave', type: 'float' })
 	public Sickleave: number
 
-	@Column({ name: 'Onleave', type: 'int' })
+	@Column({ name: 'Onleave', type: 'float' })
 	public Onleave: number
 
 	@Column({ name: 'status', type: 'varchar' })
