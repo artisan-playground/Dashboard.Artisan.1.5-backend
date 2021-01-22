@@ -18,7 +18,7 @@ export class RequestRepository extends Repository<Requests> {
 			.createQueryBuilder('request')
 			.where('request.lineId =:lineId and request.Leavetype =:Leavetype', {
 				lineId: requests.lineId,
-				Leavetype: 1,
+				Leavetype: 'ลาป่วย',
 			})
 			.getMany()
 
@@ -26,7 +26,7 @@ export class RequestRepository extends Repository<Requests> {
 			.createQueryBuilder('request')
 			.where('request.lineId =:lineId and request.Leavetype =:Leavetype', {
 				lineId: requests.lineId,
-				Leavetype: 2,
+				Leavetype: 'ลากิจ',
 			})
 			.getMany()
 
