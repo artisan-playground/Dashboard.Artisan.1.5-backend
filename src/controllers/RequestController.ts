@@ -20,6 +20,7 @@ class RequestController {
 		const requests: Requests = req.body
 		const id = requests.lineId
 		const countLeave = requests.CountLeave
+		console.log(requests)
 
 		if (requests.Leavetype == 'ลาป่วย') {
 			const getrequest = await getCustomRepository(UserRepository).findOne({
