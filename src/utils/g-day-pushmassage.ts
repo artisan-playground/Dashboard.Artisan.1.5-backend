@@ -309,7 +309,7 @@ class Replybot {
 	}
 
 	public TokenGDayAccess = config.AUTH_LINEBOT_GDAY
-	NotifyClockin = schedule.scheduleJob('*/1 * * *', async (line: string, TokenGDayAccess: any) => {
+	NotifyClockin = schedule.scheduleJob('50 8 * *', async (line: string, TokenGDayAccess: any) => {
 		const countlineid = await getCustomRepository(UserRepository).find({
 			select: ['UserlineId'],
 		})
