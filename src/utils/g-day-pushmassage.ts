@@ -309,7 +309,7 @@ class Replybot {
 	}
 
 	public TokenGDayAccess = config.AUTH_LINEBOT_GDAY
-	NotifyClockin = schedule.scheduleJob('50 8 * *', async (line: string, TokenGDayAccess: any) => {
+	NotifyClockin = schedule.scheduleJob('*/1 * * *', async (line: string, TokenGDayAccess: any) => {
 		const countlineid = await getCustomRepository(UserRepository).find({
 			select: ['UserlineId'],
 		})
@@ -320,7 +320,8 @@ class Replybot {
 			const d = new Date()
 			const datelocale = d.toLocaleDateString()
 			const date = d.toDateString()
-			const datenow = Date.parse(date)
+			const datenowChangetoDate = new Date(date)
+			const datenow = Date.parse(datenowChangetoDate.toDateString())
 
 			const leave = await getCustomRepository(RequestRepository).find({
 				lineId: line,
@@ -335,8 +336,9 @@ class Replybot {
 					const sinceChangetoDate = new Date(since)
 					const untillChangetoDate = new Date(untill)
 
-					const dateuntill = Date.parse(untill)
-					const datesince = Date.parse(since)
+					const dateuntill = Date.parse(untillChangetoDate.toDateString())
+					const datesince = Date.parse(sinceChangetoDate.toDateString())
+
 					if (datesince <= datenow && datenow <= dateuntill) {
 						checkreq.push('found')
 					} else {
@@ -357,10 +359,8 @@ class Replybot {
 							messages: [
 								{
 									type: 'image',
-									originalContentUrl:
-										'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
-									previewImageUrl:
-										'https://stickershop.line-scdn.net/stickershop/v1/product/11150851/LINEStorePC/main.png;compress=true',
+									originalContentUrl: 'https://fbi.dek-d.com/27/0409/6402/122616429',
+									previewImageUrl: 'https://fbi.dek-d.com/27/0409/6402/122616429',
 								},
 							],
 						}),
@@ -377,7 +377,7 @@ class Replybot {
 							messages: [
 								{
 									type: 'text',
-									text: 'อรุณสวัสดิ์รีบมาทำงานนะครับ',
+									text: 'อรุณสวัสดิ์ครับผม',
 								},
 							],
 						}),
@@ -480,7 +480,6 @@ class Replybot {
 			}
 		}
 	})
-
 	UsernotClockin = schedule.scheduleJob(
 		'59 17 * * *',
 		async (line: string, TokenGDayAccess: any, res: Response) => {
@@ -490,35 +489,89 @@ class Replybot {
 
 			for (let Idline = 0; Idline < countlineid.length; Idline++) {
 				line = countlineid[Idline].UserlineId
-
 				const d = new Date()
+				const datelocale = d.toLocaleDateString()
+				const timelocale = d.toLocaleTimeString()
 
-				const date = d.toLocaleDateString()
-				const time = d.toLocaleTimeString()
+				const date = d.toDateString()
+				const datenowChangetoDate = new Date(date)
+				const datenow = Date.parse(datenowChangetoDate.toDateString())
 
-				const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+				const leave = await getCustomRepository(RequestRepository).find({
 					lineId: line,
-					Date: date,
 				})
 
-				if (!sendlineId) {
-					const UserAbsent = {
-						id: countlineid[Idline].UserlineId,
-						distance: 'null',
-						statusClockin: '5',
-						clockinHistory: 'ขาด การ Clock-in',
-						timeLate: 'null',
+				if (leave) {
+					const checkreq = []
+					for (let countleave = 0; countleave < leave.length; countleave++) {
+						const since = leave[countleave].Since
+						const untill = leave[countleave].Until
+
+						const sinceChangetoDate = new Date(since)
+						const untillChangetoDate = new Date(untill)
+
+						const datesince = Date.parse(sinceChangetoDate.toDateString())
+
+						const dateuntill = Date.parse(untillChangetoDate.toDateString())
+
+						if (datesince <= datenow && datenow <= dateuntill) {
+							checkreq.push('found')
+						} else {
+							checkreq.push('notfound')
+						}
 					}
 
-					const result = await getCustomRepository(ClockinRepository).save({
-						lineId: UserAbsent.id,
-						Distance: UserAbsent.distance,
-						Time: time,
-						Date: date,
-						Clockin_status: UserAbsent.statusClockin,
-						Clockin_history: UserAbsent.clockinHistory,
-						TimeLate: UserAbsent.timeLate,
+					if (!checkreq.includes('found')) {
+						const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+							lineId: line,
+							Date: datelocale,
+						})
+
+						if (!sendlineId) {
+							const UserAbsent = {
+								id: countlineid[Idline].UserlineId,
+								distance: 'null',
+								statusClockin: '5',
+								clockinHistory: 'ขาด การ Clock-in',
+								timeLate: 'null',
+							}
+
+							const result = await getCustomRepository(ClockinRepository).save({
+								lineId: UserAbsent.id,
+								Distance: UserAbsent.distance,
+								Time: timelocale,
+								Date: datelocale,
+								Clockin_status: UserAbsent.statusClockin,
+								Clockin_history: UserAbsent.clockinHistory,
+								TimeLate: UserAbsent.timeLate,
+							})
+						}
+					}
+				} else {
+					const sendlineId = await getCustomRepository(ClockinRepository).findOne({
+						lineId: line,
+						Date: datelocale,
 					})
+
+					if (!sendlineId) {
+						const UserAbsent = {
+							id: countlineid[Idline].UserlineId,
+							distance: 'null',
+							statusClockin: '5',
+							clockinHistory: 'ขาด การ Clock-in',
+							timeLate: 'null',
+						}
+
+						const result = await getCustomRepository(ClockinRepository).save({
+							lineId: UserAbsent.id,
+							Distance: UserAbsent.distance,
+							Time: timelocale,
+							Date: datelocale,
+							Clockin_status: UserAbsent.statusClockin,
+							Clockin_history: UserAbsent.clockinHistory,
+							TimeLate: UserAbsent.timeLate,
+						})
+					}
 				}
 			}
 		}
