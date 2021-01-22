@@ -23,4 +23,14 @@ export class UserRepository extends Repository<User> {
 
 		return result
 	}
+	public async getdataRequset(user: User): Promise<User | undefined> {
+		const result = await getCustomRepository(UserRepository)
+			.createQueryBuilder('user')
+			.where('user.UserlineId=:UserlineId', {
+				UserlineId: user.UserlineId,
+			})
+			.getOne()
+
+		return result
+	}
 }

@@ -10,6 +10,9 @@ const fs = require('fs')
 const { google } = require('googleapis')
 let rawdata = fs.readFileSync('dashboard.json')
 let keyCalendar = JSON.parse(rawdata)
+const SCOPES = 'https://www.googleapis.com/auth/calendar'
+const calendar = google.calendar({ version: 'v3' })
+const auth = new google.auth.JWT(keyCalendar.client_email, null, keyCalendar.private_key, SCOPES)
 
 @Advised()
 class RequestController {
@@ -119,16 +122,45 @@ class RequestController {
 		})
 	}
 
-	public async getEvents(req: Request, res: Response) {
-		const SCOPES = 'https://www.googleapis.com/auth/calendar'
-		const calendar = google.calendar({ version: 'v3' })
+	public async createEvents(req: Request, res: Response): Promise<Response> {
+		const requests: Requests = req.body
 
-		const auth = new google.auth.JWT(
-			keyCalendar.client_email,
-			null,
-			keyCalendar.private_key,
-			SCOPES
+		let event = {
+			summary: `${req.body.Sammary}`,
+			description: `${req.body.description}`,
+			start: {
+				dateTime: `${req.body.Since}`,
+				timeZone: 'Asia/Bangkok',
+			},
+			end: {
+				dateTime: `${req.body.Until}`,
+				timeZone: 'Asia/Bangkok',
+			},
+			colorId: '5',
+		}
+
+		let response = await calendar.events.insert(
+			{
+				auth: auth,
+				calendarId: keyCalendar.CalendarID,
+				resource: event,
+			},
+			(err: object, event: object) => {
+				if (err) {
+					console.log('There was an error contacting the Calendar service: ' + err)
+					return
+				}
+				console.log('Event created: %s', event)
+			}
 		)
+
+		return res.status(200).json({
+			responseBody: response,
+			responseCode: 200,
+		})
+	}
+
+	public async getEvents(req: Request, res: Response) {
 		const date = new Date()
 		const year = `${date.getFullYear()}`
 		let mount = `${date.getMonth() + 1}`

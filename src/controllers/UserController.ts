@@ -9,7 +9,6 @@ class UserController {
 	public async ChackUser(req: Request, res: Response): Promise<Response> {
 		const user: User = req.body
 
-
 		const getemail = await getCustomRepository(UserRepository).findOne({ username: user.username })
 
 		if (getemail) {
@@ -54,6 +53,15 @@ class UserController {
 				responseCode: 401,
 			})
 		}
+	}
+	public async gatdataRequset(req: Request, res: Response): Promise<Response> {
+		const user: User = req.body
+		const result = await getCustomRepository(UserRepository).getdataRequset(user)
+
+		return res.status(200).json({
+			responseBody: result,
+			responseCode: 200,
+		})
 	}
 }
 
