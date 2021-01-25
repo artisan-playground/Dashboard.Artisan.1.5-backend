@@ -56,12 +56,18 @@ class UserController {
 	}
 	public async gatdataRequset(req: Request, res: Response): Promise<Response> {
 		const user: User = req.body
-		const result = await getCustomRepository(UserRepository).getdataRequset(user)
 
-		return res.status(200).json({
-			responseBody: result,
-			responseCode: 200,
-		})
+		const result = await getCustomRepository(UserRepository).getdataRequset(user)
+		if (!result) {
+			return res.status(200).json({
+				responseCode: 404,
+			})
+		} else {
+			return res.status(200).json({
+				responseBody: result,
+				responseCode: 200,
+			})
+		}
 	}
 }
 
