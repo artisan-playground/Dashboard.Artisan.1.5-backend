@@ -247,7 +247,14 @@ class Replybot {
 		}
 	}
 
-	public async RequestNotify(id: string, leavetype: string, leavecount: number) {
+	public async RequestNotify(
+		id: string,
+		leavetype: string,
+		leavecount: number,
+		since: string,
+		untill: string,
+		countleave: number
+	) {
 		const Token = config.AUTH_LINEBOT_GDAY
 
 		if (leavetype == 'ลาป่วย') {
@@ -262,7 +269,7 @@ class Replybot {
 					messages: [
 						{
 							type: 'text',
-							text: `คุณได้ทำการ ลาป่วยสำเร็จแล้ว หายไวๆนะครับ `,
+							text: `คุณได้ลาป่วยเป็นจนวน สำเร็จแล้ว หายไวๆนะครับ `,
 						},
 					],
 				}),
@@ -345,7 +352,7 @@ class Replybot {
 						checkreq.push('notfound')
 					}
 				}
-				console.log(checkreq)
+
 
 				if (checkreq.includes('found')) {
 					TokenGDayAccess = config.AUTH_LINEBOT_GDAY

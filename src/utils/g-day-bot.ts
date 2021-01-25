@@ -24,7 +24,7 @@ class GDayBot {
 
 		if (getUser) {
 			if (reply_text == 'Clock-in') {
-				console.log('1')
+
 
 				const d = new Date()
 				const date = d.toLocaleDateString()
@@ -34,9 +34,6 @@ class GDayBot {
 				})
 
 				if (checkclockIn) {
-					console.log('2')
-					console.log(this.TokenGDayAccess)
-					console.log(userId)
 
 					request.post({
 						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
@@ -139,11 +136,10 @@ class GDayBot {
 					lineId: userId,
 					Date: date,
 				})
-				console.log(checkclockIn)
-				console.log(userId, date)
+
 
 				if (checkclockIn) {
-					console.log('found', userId, date)
+
 					if (checkclockIn.Distance == 'null') {
 						request.post({
 							url: config.LINE_PUSH_MESSAGE_ENDPOINT,

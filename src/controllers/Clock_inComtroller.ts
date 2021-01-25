@@ -21,7 +21,7 @@ class ClockinController {
 			lineId: clock_in.lineId,
 			Date: date,
 		})
-		console.log(date)
+
 
 		if (!getData) {
 			clock_in.Distance = req.body.distance

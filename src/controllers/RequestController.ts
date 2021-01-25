@@ -42,8 +42,12 @@ class RequestController {
 							const id: string = reqsuccess?.UserlineId
 							const leavetype = requests.Leavetype
 							const leavecount = reqsuccess?.Sickleave
+							const since = requests.Since
+							const untill = requests.Until
+							const countleave = requests.CountLeave
 
-							replybot.RequestNotify(id, leavetype, leavecount)
+
+							replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
 						}
 					}
 
@@ -57,8 +61,11 @@ class RequestController {
 						const id: string = reqfail?.UserlineId
 						const leavetype = 'Fail'
 						const leavecount = reqfail?.Sickleave
+						const since = requests.Since
+						const untill = requests.Until
+						const countleave = requests.CountLeave
 
-						replybot.RequestNotify(id, leavetype, leavecount)
+						replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
 					}
 				}
 			}
@@ -86,8 +93,10 @@ class RequestController {
 							const id: string = reqsuccess?.UserlineId
 							const leavetype = requests.Leavetype
 							const leavecount = reqsuccess?.Onleave
-
-							replybot.RequestNotify(id, leavetype, leavecount)
+							const since = requests.Since
+							const untill = requests.Until
+							const countleave = requests.CountLeave
+							replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
 						}
 					}
 
@@ -101,8 +110,11 @@ class RequestController {
 						const id: string = reqfail?.UserlineId
 						const leavetype = 'Fail'
 						const leavecount = reqfail?.Onleave
+						const since = requests.Since
+						const untill = requests.Until
+						const countleave = requests.CountLeave
 
-						replybot.RequestNotify(id, leavetype, leavecount)
+						replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
 					}
 				}
 			}
