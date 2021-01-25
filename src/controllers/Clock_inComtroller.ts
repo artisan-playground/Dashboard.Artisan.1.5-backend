@@ -16,10 +16,12 @@ class ClockinController {
 		const d = new Date()
 		const time = d.toLocaleTimeString()
 		const date = d.toLocaleDateString()
+
 		const getData = await getCustomRepository(ClockinRepository).findOne({
 			lineId: clock_in.lineId,
 			Date: date,
 		})
+		console.log(date)
 
 		if (!getData) {
 			clock_in.Distance = req.body.distance
