@@ -345,6 +345,7 @@ class Replybot {
 						checkreq.push('notfound')
 					}
 				}
+				console.log(checkreq)
 
 				if (checkreq.includes('found')) {
 					TokenGDayAccess = config.AUTH_LINEBOT_GDAY
