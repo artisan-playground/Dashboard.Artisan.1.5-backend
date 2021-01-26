@@ -15,6 +15,7 @@ export class UserRepository extends Repository<User> {
 
 		return Editresult
 	}
+
 	public async getlineId(user: User): Promise<User | undefined> {
 		const result = await getCustomRepository(UserRepository)
 			.createQueryBuilder('user')
