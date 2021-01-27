@@ -24,8 +24,6 @@ class GDayBot {
 
 		if (getUser) {
 			if (reply_text == 'Clock-in') {
-
-
 				const d = new Date()
 				const date = d.toLocaleDateString()
 				const checkclockIn = await getCustomRepository(ClockinRepository).findOne({
@@ -34,7 +32,6 @@ class GDayBot {
 				})
 
 				if (checkclockIn) {
-
 					request.post({
 						url: config.LINE_PUSH_MESSAGE_ENDPOINT,
 						headers: {
@@ -137,9 +134,7 @@ class GDayBot {
 					Date: date,
 				})
 
-
 				if (checkclockIn) {
-
 					if (checkclockIn.Distance == 'null') {
 						request.post({
 							url: config.LINE_PUSH_MESSAGE_ENDPOINT,

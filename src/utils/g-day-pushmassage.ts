@@ -247,6 +247,63 @@ class Replybot {
 		}
 	}
 
+	public async Adminpushmassage(
+		email: string,
+		id: string,
+		leavetype: string,
+		leavecount: number,
+		since: string,
+		untill: string,
+		countleave: number,
+		Leaveevent: string
+	) {
+		const Token = config.AUTH_LINEBOT_GDAY
+
+		const countlineid = await getCustomRepository(UserRepository).find({
+			select: ['UserlineId'],
+			where: [{ status: 'admin' }],
+		})
+		console.log(countlineid)
+
+		for (let Idline = 0; Idline < countlineid.length; Idline++) {
+			const line = countlineid[Idline].UserlineId
+			console.log('ลูป', line)
+
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: Token,
+				},
+				body: JSON.stringify({
+					to: line,
+					messages: [
+						{
+							type: 'text',
+							text: `ผู้ใช้ Email: ${email}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${since} จนถึง ${untill} เนื่องจาก ${Leaveevent}`,
+						},
+					],
+				}),
+			})
+		}
+		request.post({
+			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: Token,
+			},
+			body: JSON.stringify({
+				to: id,
+				messages: [
+					{
+						type: 'text',
+						text: `ผู้ใช้ Email: ${email}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${since} จนถึง ${untill}`,
+					},
+				],
+			}),
+		})
+	}
+
 	public async RequestNotify(
 		id: string,
 		leavetype: string,
@@ -352,7 +409,6 @@ class Replybot {
 						checkreq.push('notfound')
 					}
 				}
-
 
 				if (checkreq.includes('found')) {
 					TokenGDayAccess = config.AUTH_LINEBOT_GDAY

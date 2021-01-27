@@ -20,7 +20,7 @@ class RequestController {
 		const requests: Requests = req.body
 		const id = requests.lineId
 		const countLeave = requests.CountLeave
-
+		const Leaveevent = requests.Leaveevent
 		if (requests.Leavetype == 'ลาป่วย') {
 			const getrequest = await getCustomRepository(UserRepository).findOne({
 				UserlineId: id,
@@ -30,6 +30,26 @@ class RequestController {
 				const countDB: number = getrequest?.Sickleave
 
 				if (countDB != 0 && countDB >= countLeave) {
+					const id: string = getrequest?.UserlineId
+					const email = getrequest?.username
+					const leavetype = requests.Leavetype
+					const leavecount = getrequest?.Sickleave
+					const since = requests.Since
+					const untill = requests.Until
+					const countleave = requests.CountLeave
+
+					replybot.Adminpushmassage(
+						email,
+						id,
+						leavetype,
+						leavecount,
+						since,
+						untill,
+						countleave,
+						Leaveevent
+					)
+
+					//
 					const remain = countDB - countLeave
 
 					const Editresult = await getCustomRepository(UserRepository).update(getrequest?.userId, {
@@ -48,7 +68,6 @@ class RequestController {
 							const since = requests.Since
 							const untill = requests.Until
 							const countleave = requests.CountLeave
-
 
 							replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
 						}
