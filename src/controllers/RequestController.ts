@@ -28,49 +28,25 @@ class RequestController {
 
 				if (countDB != 0 && countDB >= countLeave) {
 					const id: string = getrequest?.UserlineId
-					const email = getrequest?.username
+					const name = getrequest?.name
 					const leavetype = requests.Leavetype
 					const leavecount = getrequest?.Sickleave
 					const since = requests.Since
 					const untill = requests.Until
 					const countleave = requests.CountLeave
+					const timeperiod = requests.Timeperiod
 
 					replybot.Adminpushmassage(
-						email,
+						name,
 						id,
 						leavetype,
 						leavecount,
 						since,
 						untill,
 						countleave,
-						Leaveevent
+						Leaveevent,
+						timeperiod
 					)
-
-					//
-					const remain = countDB - countLeave
-
-					const Editresult = await getCustomRepository(UserRepository).update(getrequest?.userId, {
-						Sickleave: remain,
-					})
-
-					if (Editresult) {
-						const reqsuccess = await getCustomRepository(UserRepository).findOne({
-							userId: getrequest?.userId,
-						})
-
-						if (typeof reqsuccess?.UserlineId === 'string') {
-							const id: string = reqsuccess?.UserlineId
-							const leavetype = requests.Leavetype
-							const leavecount = reqsuccess?.Sickleave
-							const since = requests.Since
-							const untill = requests.Until
-							const countleave = requests.CountLeave
-
-							replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
-						}
-					}
-
-					const result = await getCustomRepository(RequestRepository).clockreq(requests)
 				} else {
 					const reqfail = await getCustomRepository(UserRepository).findOne({
 						userId: getrequest?.userId,
@@ -97,29 +73,26 @@ class RequestController {
 				const countDB: number = getrequest?.Onleave
 
 				if (countDB != 0 && countDB >= countLeave) {
-					const remain = countDB - countLeave
+					const id: string = getrequest?.UserlineId
+					const name = getrequest?.name
+					const leavetype = requests.Leavetype
+					const leavecount = getrequest?.Onleave
+					const since = requests.Since
+					const untill = requests.Until
+					const countleave = requests.CountLeave
+					const timeperiod = requests.Timeperiod
 
-					const Editresult = await getCustomRepository(UserRepository).update(getrequest?.userId, {
-						Onleave: remain,
-					})
-
-					if (Editresult) {
-						const reqsuccess = await getCustomRepository(UserRepository).findOne({
-							userId: getrequest?.userId,
-						})
-
-						if (typeof reqsuccess?.UserlineId === 'string') {
-							const id: string = reqsuccess?.UserlineId
-							const leavetype = requests.Leavetype
-							const leavecount = reqsuccess?.Onleave
-							const since = requests.Since
-							const untill = requests.Until
-							const countleave = requests.CountLeave
-							replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
-						}
-					}
-
-					const result = await getCustomRepository(RequestRepository).clockreq(requests)
+					replybot.Adminpushmassage(
+						name,
+						id,
+						leavetype,
+						leavecount,
+						since,
+						untill,
+						countleave,
+						Leaveevent,
+						timeperiod
+					)
 				} else {
 					const reqfail = await getCustomRepository(UserRepository).findOne({
 						userId: getrequest?.userId,
@@ -134,6 +107,34 @@ class RequestController {
 						const countleave = requests.CountLeave
 
 						replybot.RequestNotify(id, leavetype, leavecount, since, untill, countleave)
+					}
+				}
+			}
+		}
+	}
+	public async Addrequest(
+		countleave: number,
+		leavetype: string,
+		iduserrequest: string,
+		Request: any
+	) {
+		const getrequest = await getCustomRepository(UserRepository).findOne({
+			UserlineId: iduserrequest,
+		})
+		if (leavetype == 'ลาป่วย') {
+			const countDB = getrequest?.Sickleave
+			const id = getrequest?.userId
+
+			if (typeof countDB === 'number') {
+				const remain = countDB - countleave
+
+				if (typeof id === 'number') {
+					const Editresult = await getCustomRepository(UserRepository).update(id, {
+						Sickleave: remain,
+					})
+
+					if (Editresult) {
+						const result = await getCustomRepository(RequestRepository).clockreq(Request)
 					}
 				}
 			}

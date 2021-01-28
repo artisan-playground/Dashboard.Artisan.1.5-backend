@@ -9,6 +9,8 @@ export class User {
 
 	@Column({ name: 'username', type: 'varchar' })
 	public username: string
+	@Column({ name: 'name', type: 'varchar' })
+	public name: string
 
 	@Column({ name: 'UserlineId', type: 'varchar' })
 	public UserlineId: string
