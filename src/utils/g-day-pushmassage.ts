@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import request from 'request'
 import { getCustomRepository } from 'typeorm'
+import { requestController } from '../controllers/RequestController'
 import { ClockinRepository } from '../repository/Clock_inRepository'
 import { ClockoutRepository } from '../repository/Clock_outRepository'
 import { RequestRepository } from '../repository/RequestRepository'
@@ -248,14 +249,15 @@ class Replybot {
 	}
 
 	public async Adminpushmassage(
-		email: string,
+		name: string,
 		id: string,
 		leavetype: string,
 		leavecount: number,
 		since: string,
 		untill: string,
 		countleave: number,
-		Leaveevent: string
+		Leaveevent: string,
+		timeperiod: string
 	) {
 		const Token = config.AUTH_LINEBOT_GDAY
 
@@ -263,11 +265,9 @@ class Replybot {
 			select: ['UserlineId'],
 			where: [{ status: 'admin' }],
 		})
-		console.log(countlineid)
 
 		for (let Idline = 0; Idline < countlineid.length; Idline++) {
 			const line = countlineid[Idline].UserlineId
-			console.log('ลูป', line)
 
 			request.post({
 				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
@@ -279,8 +279,28 @@ class Replybot {
 					to: line,
 					messages: [
 						{
-							type: 'text',
-							text: `ผู้ใช้ Email: ${email}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${since} จนถึง ${untill} เนื่องจาก ${Leaveevent}`,
+							type: 'template',
+							altText: 'this is a buttons template',
+							template: {
+								type: 'buttons',
+								thumbnailImageUrl:
+									'https://stickershop.line-scdn.net/stickershop/v1/sticker/8136618/iPhone/sticker@2x.png',
+								imageBackgroundColor: '#FFFFFF',
+								title: `คุณ ${name} ${leavetype} จำนวน ${countleave} วัน`,
+								text: `ตั้งแต่วันที่ ${since} - ${untill} เนื่องจาก ${Leaveevent}`,
+								actions: [
+									{
+										type: 'postback',
+										label: 'Approve',
+										data: `Approve&${id}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+									},
+									{
+										type: 'postback',
+										label: 'Reject',
+										data: `Reject&${id}${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+									},
+								],
+							},
 						},
 					],
 				}),
@@ -297,7 +317,167 @@ class Replybot {
 				messages: [
 					{
 						type: 'text',
-						text: `ผู้ใช้ Email: ${email}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${since} จนถึง ${untill}`,
+						text: `ผู้ใช้ Email: ${name}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${since} จนถึง ${untill} เนื่องจาก ${Leaveevent}                     หมายเหตุ: กรุณารอข้อความตอบกลับจาก Admin          `,
+					},
+				],
+			}),
+		})
+	}
+	public async SendConfirmmassage(
+		adminapprove: string,
+		iduserrequest: string,
+		comfirm: string,
+		adminid: string,
+		countleave: number,
+		leavetype: string,
+		since: string,
+		untill: string,
+		Leaveevent: string,
+		timeperiod: string
+	) {
+		const adminname = await getCustomRepository(UserRepository).findOne({ UserlineId: adminid })
+		const username = await getCustomRepository(UserRepository).findOne({
+			UserlineId: iduserrequest,
+		})
+
+		if (adminapprove == 'Approve') {
+			const countlineid = await getCustomRepository(UserRepository).find({
+				select: ['UserlineId'],
+				where: [{ status: 'admin' }],
+			})
+
+			for (let Idline = 0; Idline < countlineid.length; Idline++) {
+				const line = countlineid[Idline].UserlineId
+
+				request.post({
+					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: this.TokenGDayAccess,
+					},
+					body: JSON.stringify({
+						to: line,
+						messages: [
+							{
+								type: 'text',
+								text: ` แอดมิน ${adminname?.name} ทำการ Approve/Reject การลาให้คุณ ${username?.name}`,
+							},
+						],
+					}),
+				})
+			}
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: iduserrequest,
+					messages: [
+						{
+							type: 'text',
+							text: `คุณได้รับการอนุมัติให้ลาได้ โดย admin ${adminname?.name} แล้ว!!!`,
+						},
+					],
+				}),
+			})
+
+			const Request = {
+				lineId: iduserrequest,
+				Leavetype: leavetype,
+				Timeperiod: timeperiod,
+				Since: since,
+				Until: untill,
+				CountLeave: countleave,
+				Leaveevent: Leaveevent,
+			}
+			requestController.Addrequest(countleave, leavetype, iduserrequest, Request)
+		} else if (adminapprove == 'Reject') {
+			const countlineid = await getCustomRepository(UserRepository).find({
+				select: ['UserlineId'],
+				where: [{ status: 'admin' }],
+			})
+
+			const rejectname = await getCustomRepository(UserRepository).find({
+				UserlineId: iduserrequest,
+			})
+
+			for (let Idline = 0; Idline < countlineid.length; Idline++) {
+				const line = countlineid[Idline].UserlineId
+
+				request.post({
+					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: this.TokenGDayAccess,
+					},
+					body: JSON.stringify({
+						to: line,
+						messages: [
+							{
+								type: 'text',
+								text: ` แอดมิน ${adminname?.name} ทำการ Approve/Reject การลาให้คุณ ${username?.name}`,
+							},
+						],
+					}),
+				})
+			}
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: this.TokenGDayAccess,
+				},
+				body: JSON.stringify({
+					to: iduserrequest,
+					messages: [
+						{
+							type: 'text',
+							text: `คุณไม่ได้รับการอนุมัติให้ลา โดย admin ${adminname?.name} !!`,
+						},
+					],
+				}),
+			})
+		}
+	}
+	public async Confirmreq(
+		adminId: string,
+		adminapprove: string,
+		Iduser: string,
+		countleave: number,
+		leavetype: string,
+		since: string,
+		untill: string,
+		Leaveevent: string,
+		timeperiod: string
+	) {
+		const Token = config.AUTH_LINEBOT_GDAY
+
+		request.post({
+			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: Token,
+			},
+			body: JSON.stringify({
+				to: adminId,
+				messages: [
+					{
+						type: 'text',
+						text: `Do you want to ${adminapprove} ?`,
+						quickReply: {
+							items: [
+								{
+									type: 'action',
+									action: {
+										type: 'postback',
+										label: `Confirm ${adminapprove}`,
+										data: `${adminapprove}&${Iduser}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}&Yes&${adminId}`,
+									},
+								},
+							],
+						},
 					},
 				],
 			}),
