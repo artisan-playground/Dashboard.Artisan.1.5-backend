@@ -13,6 +13,17 @@ export class RequestRepository extends Repository<Requests> {
 		return result
 	}
 
+	public async Adminadd(requests: any) {
+		const dbdata = await getCustomRepository(RequestRepository)
+			.createQueryBuilder('request')
+
+			.getMany()
+
+		const result = await getCustomRepository(RequestRepository).save(requests)
+
+		return result
+	}
+
 	public async getdataRequset(requests: Requests): Promise<Requests | undefined> {
 		const sickleave = await getCustomRepository(RequestRepository)
 			.createQueryBuilder('request')

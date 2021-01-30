@@ -14,7 +14,8 @@ route.post('/checkuser', userController.ChackUser)
 route.post('/getrequest', requestController.gatdataRequset)
 route.post('/getEvents', requestController.getEvents)
 route.post('/clockout', clockoutController.creatCO)
-route.post('/request', requestController.creatReq)
+route.post('/Userrequest', requestController.UserReq)
+route.post('/Adminrequest', requestController.AdminReq)
 route.post('/clockin', clockinController.creatCI)
 
 export default route

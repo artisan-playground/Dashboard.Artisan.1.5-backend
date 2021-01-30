@@ -225,6 +225,7 @@ class GDayBot {
 			const adminid = datasplit[9]
 
 			const adminId = req.body.events[0].source.userId
+			console.log(data)
 
 			if (adminapprove == 'Approve' && comfirm == undefined) {
 				replybot.Confirmreq(
