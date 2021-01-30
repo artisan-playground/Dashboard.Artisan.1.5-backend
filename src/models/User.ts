@@ -15,10 +15,10 @@ export class User {
 	@Column({ name: 'UserlineId', type: 'varchar' })
 	public UserlineId: string
 
-	@Column({ name: 'Sickleave', type: 'float' })
+	@Column({ name: 'Sickleave', type: 'float', default: 3 })
 	public Sickleave: number
 
-	@Column({ name: 'Onleave', type: 'float' })
+	@Column({ name: 'Onleave', type: 'float', default: 5 })
 	public Onleave: number
 
 	@Column({ name: 'status', type: 'varchar' })
