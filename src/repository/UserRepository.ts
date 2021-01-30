@@ -25,13 +25,24 @@ export class UserRepository extends Repository<User> {
 		return result
 	}
 	public async getdataRequset(user: User): Promise<User | undefined> {
-		const result = await getCustomRepository(UserRepository)
-			.createQueryBuilder('user')
-			.where('user.UserlineId=:UserlineId', {
-				UserlineId: user.UserlineId,
-			})
-			.getOne()
+		const status = user.status
 
-		return result
+		if (status === 'LeavesOther') {
+			const result = await getCustomRepository(UserRepository)
+				.createQueryBuilder('user')
+				.where('user.username=:username', {
+					username: user.username,
+				})
+				.getOne()
+			return result
+		} else {
+			const result = await getCustomRepository(UserRepository)
+				.createQueryBuilder('user')
+				.where('user.UserlineId=:UserlineId', {
+					UserlineId: user.UserlineId,
+				})
+				.getOne()
+			return result
+		}
 	}
 }
