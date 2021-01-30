@@ -15,7 +15,8 @@ route.post('/getrequest', userController.gatdataRequset)
 route.post('/getEvents', requestController.getEvents)
 route.post('/createEvents', requestController.createEvents)
 route.post('/clockout', clockoutController.creatCO)
-route.post('/request', requestController.creatReq)
+route.post('/Userrequest', requestController.UserReq)
+route.post('/Adminrequest', requestController.AdminReq)
 route.post('/clockin', clockinController.creatCI)
 
 export default route

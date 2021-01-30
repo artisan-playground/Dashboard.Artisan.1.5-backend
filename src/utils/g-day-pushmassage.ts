@@ -287,17 +287,32 @@ class Replybot {
 									'https://stickershop.line-scdn.net/stickershop/v1/sticker/8136618/iPhone/sticker@2x.png',
 								imageBackgroundColor: '#FFFFFF',
 								title: `คุณ ${name} ${leavetype} จำนวน ${countleave} วัน`,
-								text: `ตั้งแต่วันที่ ${since} - ${untill} เนื่องจาก ${Leaveevent}`,
+								text: `ตั้งแต่วันที่ ${since} ถึง ${untill} เนื่องจาก ${Leaveevent}`,
 								actions: [
 									{
 										type: 'postback',
-										label: 'Approve',
-										data: `Approve&${id}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+										label: 'กรุณาเลือก',
+										data: `...`,
+									},
+								],
+							},
+							quickReply: {
+								items: [
+									{
+										type: 'action',
+										action: {
+											type: 'postback',
+											label: 'Approve',
+											data: `Approve&${id}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+										},
 									},
 									{
-										type: 'postback',
-										label: 'Reject',
-										data: `Reject&${id}${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+										type: 'action',
+										action: {
+											type: 'postback',
+											label: 'Reject',
+											data: `Reject&${id}${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+										},
 									},
 								],
 							},
