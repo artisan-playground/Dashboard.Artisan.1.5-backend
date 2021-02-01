@@ -139,7 +139,7 @@ class Replybot {
 							},
 							{
 								type: 'text',
-								text: `คุณ Clock out เวลา ${time}  Daily #${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
+								text: `คุณ Clock out เวลา ${time}  Daily #Project${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
 							},
 
 							{
@@ -168,7 +168,7 @@ class Replybot {
 							},
 							{
 								type: 'text',
-								text: `คุณ Clock out เวลา ${time}  Daily #${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
+								text: `คุณ Clock out เวลา ${time}  Daily #Project${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
 							},
 							{
 								type: 'image',
