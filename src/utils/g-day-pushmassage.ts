@@ -117,6 +117,11 @@ class Replybot {
 				lineId: idAlert,
 				Date: date,
 			})
+			const time = checkclockout?.Time
+			const today = checkclockout?.Today
+			const tomorrow = checkclockout?.Tomorrow
+			const issue = checkclockout?.Issue
+			const project = checkclockout?.Projects
 
 			if (checkclockout) {
 				request.post({
@@ -132,6 +137,11 @@ class Replybot {
 								type: 'text',
 								text: ` แก้ไขการ Clock-out สำเร็จแล้วครับ กลับบ้านกันเถอะๆ `,
 							},
+							{
+								type: 'text',
+								text: `คุณ Clock out เวลา ${time}  Daily #${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
+							},
+
 							{
 								type: 'image',
 								originalContentUrl:
@@ -153,28 +163,19 @@ class Replybot {
 						to: idAlert,
 						messages: [
 							{
+								type: 'text',
+								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับๆ `,
+							},
+							{
+								type: 'text',
+								text: `คุณ Clock out เวลา ${time}  Daily #${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
+							},
+							{
 								type: 'image',
 								originalContentUrl:
 									'https://stickershop.line-scdn.net/stickershop/v1/product/1343813/LINEStorePC/main.png;compress=true',
 								previewImageUrl:
 									'https://stickershop.line-scdn.net/stickershop/v1/product/1343813/LINEStorePC/main.png;compress=true',
-							},
-						],
-					}),
-				})
-
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: Token,
-					},
-					body: JSON.stringify({
-						to: idAlert,
-						messages: [
-							{
-								type: 'text',
-								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับๆ `,
 							},
 						],
 					}),
@@ -201,6 +202,10 @@ class Replybot {
 			select: ['UserlineId'],
 			where: [{ status: 'admin' }],
 		})
+		const formetsince = since.split('-')
+		const formetuntill = untill.split('-')
+		const newsince = formetsince[2] + '/' + formetsince[1] + '/' + formetsince[0]
+		const newuntill = formetuntill[2] + '/' + formetuntill[1] + '/' + formetuntill[0]
 
 		for (let Idline = 0; Idline < countlineid.length; Idline++) {
 			const line = countlineid[Idline].UserlineId
@@ -220,10 +225,10 @@ class Replybot {
 							template: {
 								type: 'buttons',
 								thumbnailImageUrl:
-									'https://www.flaticon.com/svg/vstatic/svg/3135/3135715.svg?token=exp=1612165938~hmac=34d07a503862ecb74b271ab8498a9040',
+									'https://th.hrnote.asia/wp/wp-content/uploads/2019/03/shutterstock_1251870169.jpg',
 								imageBackgroundColor: '#FFFFFF',
 								title: `คุณ ${name} ${leavetype} จำนวน ${countleave} วัน`,
-								text: `ตั้งแต่วันที่ ${since} ถึง ${untill} เนื่องจาก ${Leaveevent}`,
+								text: `ตั้งแต่วันที่ ${newsince} ถึง ${newuntill} เนื่องจาก ${Leaveevent}`,
 								actions: [
 									{
 										type: 'postback',
@@ -269,7 +274,7 @@ class Replybot {
 					messages: [
 						{
 							type: 'text',
-							text: `ผู้ใช้  ${name}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${since} จนถึง ${untill} เนื่องจาก ${Leaveevent} หมายเหตุ: กรุณารอข้อความตอบกลับจาก Admin          `,
+							text: `ผู้ใช้  ${name}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${newsince} จนถึง ${newuntill} เนื่องจาก ${Leaveevent} หมายเหตุ: กรุณารอข้อความตอบกลับจาก Admin          `,
 						},
 						{
 							type: 'image',

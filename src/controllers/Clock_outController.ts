@@ -8,6 +8,8 @@ import { ClockoutRepository } from '../repository/Clock_outRepository'
 class ClockoutController {
 	public async creatCO(req: Request, res: Response): Promise<Response> {
 		const clock_out: Clockout = req.body
+		console.log(req.body)
+
 		const id = req.body.lineId
 		const today = req.body.Today
 		const tomorrow = req.body.Tomorrow
@@ -49,7 +51,7 @@ class ClockoutController {
 
 			return res.status(200).json({
 				message: `แก้ไขสำเร็จ`,
-				responseCode: 100,
+				responseCode: 200,
 			})
 		}
 	}
