@@ -20,7 +20,7 @@ const auth = new google.auth.JWT(keyCalendar.client_email, null, keyCalendar.pri
 class RequestController {
 	public async UserReq(req: Request, res: Response) {
 		const requests: Requests = req.body
-		console.log(requests)
+
 		const id = requests.lineId
 		const countLeave = requests.CountLeave
 		const Leaveevent = requests.Leaveevent
@@ -41,6 +41,7 @@ class RequestController {
 					const untill = requests.Until
 					const countleave = requests.CountLeave
 					const timeperiod = requests.Timeperiod
+					const checkUnconfirm = 'first'
 
 					replybot.Adminpushmassage(
 						name,
@@ -51,7 +52,8 @@ class RequestController {
 						untill,
 						countleave,
 						Leaveevent,
-						timeperiod
+						timeperiod,
+						checkUnconfirm
 					)
 				} else {
 					const reqfail = await getCustomRepository(UserRepository).findOne({
@@ -87,6 +89,7 @@ class RequestController {
 					const untill = requests.Until
 					const countleave = requests.CountLeave
 					const timeperiod = requests.Timeperiod
+					const checkUnconfirm = 'first'
 
 					replybot.Adminpushmassage(
 						name,
@@ -97,7 +100,8 @@ class RequestController {
 						untill,
 						countleave,
 						Leaveevent,
-						timeperiod
+						timeperiod,
+						checkUnconfirm
 					)
 				} else {
 					const reqfail = await getCustomRepository(UserRepository).findOne({
@@ -124,14 +128,11 @@ class RequestController {
 		const countLeave = requests.CountLeave
 		const Admibreq = req.body
 		const leaveList = req.body.leaveList
+
 		const countList = leaveList.length
 		const Token = config.AUTH_LINEBOT_GDAY
 		const admindata = await getCustomRepository(UserRepository).findOne({ UserlineId: id })
 		const adminname = admindata?.name
-
-		console.log(countList)
-
-		console.log(req.body)
 
 		if (requests.Leavetype == 'ลาป่วย') {
 			for (let count = 0; count < countList; count++) {
@@ -159,6 +160,7 @@ class RequestController {
 								Until: Admibreq.Until,
 								CountLeave: Admibreq.CountLeave,
 								Leaveevent: Admibreq.Leaveevent,
+								Leavefor: admindata?.name,
 							}
 							const result = await getCustomRepository(RequestRepository).Adminadd(adminreq)
 							if (result) {
@@ -295,6 +297,8 @@ class RequestController {
 		const getrequest = await getCustomRepository(UserRepository).findOne({
 			UserlineId: iduserrequest,
 		})
+		Request.Leavefor = getrequest?.name
+
 		if (leavetype == 'ลาป่วย') {
 			const countDB = getrequest?.Sickleave
 			const id = getrequest?.userId

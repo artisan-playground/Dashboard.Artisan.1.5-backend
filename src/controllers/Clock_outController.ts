@@ -49,7 +49,7 @@ class ClockoutController {
 
 			return res.status(200).json({
 				message: `แก้ไขสำเร็จ`,
-				responseCode: 200,
+				responseCode: 100,
 			})
 		}
 	}
