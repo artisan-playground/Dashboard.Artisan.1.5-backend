@@ -8,6 +8,8 @@ import { ClockoutRepository } from '../repository/Clock_outRepository'
 class ClockoutController {
 	public async creatCO(req: Request, res: Response): Promise<Response> {
 		const clock_out: Clockout = req.body
+		console.log(req.body)
+
 		const id = req.body.lineId
 		const today = req.body.Today
 		const tomorrow = req.body.Tomorrow

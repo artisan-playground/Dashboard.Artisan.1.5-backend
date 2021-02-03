@@ -26,6 +26,8 @@ export class Requests {
 
 	@Column({ name: 'Leaveevent', type: 'text' })
 	public Leaveevent: string
+	@Column({ name: 'Leavefor', type: 'text' })
+	public Leavefor: string
 
 	@Index()
 	@ManyToOne((_type) => User, (userId) => userId.requests, {})

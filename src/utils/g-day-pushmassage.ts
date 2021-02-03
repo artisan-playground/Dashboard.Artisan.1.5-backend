@@ -31,26 +31,13 @@ class Replybot {
 					to: idAlert,
 					messages: [
 						{
+							type: 'text',
+							text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
+						},
+						{
 							type: 'sticker',
 							packageId: '11537',
 							stickerId: '52002734',
-						},
-					],
-				}),
-			})
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: Token,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
 						},
 					],
 				}),
@@ -66,26 +53,13 @@ class Replybot {
 					to: idAlert,
 					messages: [
 						{
+							type: 'text',
+							text: `Clock-in สำเร็จแล้ว แต่น่าเสียดาย !! คุณ Clock-in สายไป แต่ก็ไม่เกินเวลานะครับ`,
+						},
+						{
 							type: 'sticker',
 							packageId: '11537',
 							stickerId: '52002734',
-						},
-					],
-				}),
-			})
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: Token,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-in สำเร็จแล้ว แต่น่าเสียดาย !! คุณ Clock-in สายไป แต่ก็ไม่เกินเวลานะครับ`,
 						},
 					],
 				}),
@@ -103,26 +77,13 @@ class Replybot {
 					to: idAlert,
 					messages: [
 						{
+							type: 'text',
+							text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
+						},
+						{
 							type: 'sticker',
 							packageId: '11538',
 							stickerId: '51626522',
-						},
-					],
-				}),
-			})
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: Token,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-in สำเร็จแล้ว ${textAlert} คุณ Clock-in ${AlertHis} `,
 						},
 					],
 				}),
@@ -138,26 +99,13 @@ class Replybot {
 					to: idAlert,
 					messages: [
 						{
+							type: 'text',
+							text: `Clock-in สำเร็จแล้ว  แต่ไม่น่าเลย !! คุณ ${AlertHis} `,
+						},
+						{
 							type: 'sticker',
 							packageId: '11537',
 							stickerId: '52002755',
-						},
-					],
-				}),
-			})
-
-			request.post({
-				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: Token,
-				},
-				body: JSON.stringify({
-					to: idAlert,
-					messages: [
-						{
-							type: 'text',
-							text: `Clock-in สำเร็จแล้ว  แต่ไม่น่าเลย !! คุณ ${AlertHis} `,
 						},
 					],
 				}),
@@ -169,6 +117,11 @@ class Replybot {
 				lineId: idAlert,
 				Date: date,
 			})
+			const time = checkclockout?.Time
+			const today = checkclockout?.Today
+			const tomorrow = checkclockout?.Tomorrow
+			const issue = checkclockout?.Issue
+			const project = checkclockout?.Projects
 
 			if (checkclockout) {
 				request.post({
@@ -181,28 +134,20 @@ class Replybot {
 						to: idAlert,
 						messages: [
 							{
+								type: 'text',
+								text: ` แก้ไขการ Clock-out สำเร็จแล้วครับ กลับบ้านกันเถอะๆ `,
+							},
+							{
+								type: 'text',
+								text: `คุณ Clock out เวลา ${time}  Daily #Project${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
+							},
+
+							{
 								type: 'image',
 								originalContentUrl:
 									'https://stickershop.line-scdn.net/stickershop/v1/sticker/28816410/android/sticker.png;compress=true',
 								previewImageUrl:
 									'https://stickershop.line-scdn.net/stickershop/v1/sticker/28816410/android/sticker.png;compress=true',
-							},
-						],
-					}),
-				})
-
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: Token,
-					},
-					body: JSON.stringify({
-						to: idAlert,
-						messages: [
-							{
-								type: 'text',
-								text: ` แก้ไขการ Clock-out สำเร็จแล้วครับ กลับบ้านกันเถอะๆ `,
 							},
 						],
 					}),
@@ -218,28 +163,19 @@ class Replybot {
 						to: idAlert,
 						messages: [
 							{
+								type: 'text',
+								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับๆ `,
+							},
+							{
+								type: 'text',
+								text: `คุณ Clock out เวลา ${time}  Daily #Project${project} วันนี้ทำ: ${today} ติดปัญหา: ${issue} พรุ่งนี้ทำ: ${tomorrow}  `,
+							},
+							{
 								type: 'image',
 								originalContentUrl:
 									'https://stickershop.line-scdn.net/stickershop/v1/product/1343813/LINEStorePC/main.png;compress=true',
 								previewImageUrl:
 									'https://stickershop.line-scdn.net/stickershop/v1/product/1343813/LINEStorePC/main.png;compress=true',
-							},
-						],
-					}),
-				})
-
-				request.post({
-					url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization: Token,
-					},
-					body: JSON.stringify({
-						to: idAlert,
-						messages: [
-							{
-								type: 'text',
-								text: `คุณ Clock-out สำเร็จแล้ว กลับบ้านดีๆนะครับๆ `,
 							},
 						],
 					}),
@@ -250,14 +186,15 @@ class Replybot {
 
 	public async Adminpushmassage(
 		name: string,
-		id: string,
+		iduserrequest: string,
 		leavetype: string,
 		leavecount: number,
 		since: string,
 		untill: string,
 		countleave: number,
 		Leaveevent: string,
-		timeperiod: string
+		timeperiod: string,
+		checkUnconfirm: string
 	) {
 		const Token = config.AUTH_LINEBOT_GDAY
 
@@ -265,6 +202,10 @@ class Replybot {
 			select: ['UserlineId'],
 			where: [{ status: 'admin' }],
 		})
+		const formetsince = since.split('-')
+		const formetuntill = untill.split('-')
+		const newsince = formetsince[2] + '/' + formetsince[1] + '/' + formetsince[0]
+		const newuntill = formetuntill[2] + '/' + formetuntill[1] + '/' + formetuntill[0]
 
 		for (let Idline = 0; Idline < countlineid.length; Idline++) {
 			const line = countlineid[Idline].UserlineId
@@ -280,14 +221,14 @@ class Replybot {
 					messages: [
 						{
 							type: 'template',
-							altText: 'this is a buttons template',
+							altText: 'มีพนักงานอยากลาหยุดงับๆๆ',
 							template: {
 								type: 'buttons',
 								thumbnailImageUrl:
-									'https://stickershop.line-scdn.net/stickershop/v1/sticker/8136618/iPhone/sticker@2x.png',
+									'https://th.hrnote.asia/wp/wp-content/uploads/2019/03/shutterstock_1251870169.jpg',
 								imageBackgroundColor: '#FFFFFF',
 								title: `คุณ ${name} ${leavetype} จำนวน ${countleave} วัน`,
-								text: `ตั้งแต่วันที่ ${since} ถึง ${untill} เนื่องจาก ${Leaveevent}`,
+								text: `ตั้งแต่วันที่ ${newsince} ถึง ${newuntill} เนื่องจาก ${Leaveevent}`,
 								actions: [
 									{
 										type: 'postback',
@@ -303,7 +244,7 @@ class Replybot {
 										action: {
 											type: 'postback',
 											label: 'Approve',
-											data: `Approve&${id}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+											data: `Approve&${iduserrequest}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}& ${name}&${leavecount}`,
 										},
 									},
 									{
@@ -311,7 +252,7 @@ class Replybot {
 										action: {
 											type: 'postback',
 											label: 'Reject',
-											data: `Reject&${id}${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}`,
+											data: `Reject&${iduserrequest}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}& ${name}&${leavecount}`,
 										},
 									},
 								],
@@ -321,22 +262,29 @@ class Replybot {
 				}),
 			})
 		}
-		request.post({
-			url: config.LINE_PUSH_MESSAGE_ENDPOINT,
-			headers: {
-				'Content-Type': 'application/json',
-				Authorization: Token,
-			},
-			body: JSON.stringify({
-				to: id,
-				messages: [
-					{
-						type: 'text',
-						text: `ผู้ใช้ Email: ${name}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${since} จนถึง ${untill} เนื่องจาก ${Leaveevent}                     หมายเหตุ: กรุณารอข้อความตอบกลับจาก Admin          `,
-					},
-				],
-			}),
-		})
+		if (checkUnconfirm == 'first') {
+			request.post({
+				url: config.LINE_PUSH_MESSAGE_ENDPOINT,
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: Token,
+				},
+				body: JSON.stringify({
+					to: iduserrequest,
+					messages: [
+						{
+							type: 'text',
+							text: `ผู้ใช้  ${name}  มีการร้องขอในการ ${leavetype} เป็นจำนวน ${countleave} วัน   ตั้งแต่ ${newsince} จนถึง ${newuntill} เนื่องจาก ${Leaveevent} หมายเหตุ: กรุณารอข้อความตอบกลับจาก Admin          `,
+						},
+						{
+							type: 'image',
+							originalContentUrl: 'https://www.catdumb.com/wp-content/uploads/2016/07/emo-1-1.png',
+							previewImageUrl: 'https://www.catdumb.com/wp-content/uploads/2016/07/emo-1-1.png',
+						},
+					],
+				}),
+			})
+		}
 	}
 	public async SendConfirmmassage(
 		adminapprove: string,
@@ -394,6 +342,13 @@ class Replybot {
 							type: 'text',
 							text: `คุณได้รับการอนุมัติให้ลาได้ โดย admin ${adminname?.name} แล้ว!!!`,
 						},
+						{
+							type: 'image',
+							originalContentUrl:
+								'https://stickershop.line-scdn.net/stickershop/v1/product/7182904/LINEStorePC/main.png;compress=true',
+							previewImageUrl:
+								'https://stickershop.line-scdn.net/stickershop/v1/product/7182904/LINEStorePC/main.png;compress=true',
+						},
 					],
 				}),
 			})
@@ -408,7 +363,7 @@ class Replybot {
 				Leaveevent: Leaveevent,
 			}
 			requestController.Addrequest(countleave, leavetype, iduserrequest, Request)
-		} else if (adminapprove == 'Reject') {
+		} else {
 			const countlineid = await getCustomRepository(UserRepository).find({
 				select: ['UserlineId'],
 				where: [{ status: 'admin' }],
@@ -451,6 +406,11 @@ class Replybot {
 							type: 'text',
 							text: `คุณไม่ได้รับการอนุมัติให้ลา โดย admin ${adminname?.name} !!`,
 						},
+						{
+							type: 'image',
+							originalContentUrl: 'https://media4.giphy.com/media/hW4R3ZLZEDEZieTqJk/giphy.gif',
+							previewImageUrl: 'https://media4.giphy.com/media/hW4R3ZLZEDEZieTqJk/giphy.gif',
+						},
 					],
 				}),
 			})
@@ -465,7 +425,8 @@ class Replybot {
 		since: string,
 		untill: string,
 		Leaveevent: string,
-		timeperiod: string
+		timeperiod: string,
+		name: string
 	) {
 		const Token = config.AUTH_LINEBOT_GDAY
 
@@ -487,8 +448,16 @@ class Replybot {
 									type: 'action',
 									action: {
 										type: 'postback',
-										label: `Confirm ${adminapprove}`,
-										data: `${adminapprove}&${Iduser}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}&Yes&${adminId}`,
+										label: `Confirm `,
+										data: `${adminapprove}&${Iduser}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}&Yes&${adminId}&${name}`,
+									},
+								},
+								{
+									type: 'action',
+									action: {
+										type: 'postback',
+										label: `Unconfirm`,
+										data: `${adminapprove}&${Iduser}&${countleave}&${leavetype}&${since}&${untill}&${Leaveevent}&${timeperiod}&No&${adminId}&${name}`,
 									},
 								},
 							],

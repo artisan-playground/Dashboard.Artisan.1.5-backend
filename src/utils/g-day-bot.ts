@@ -223,11 +223,13 @@ class GDayBot {
 			const timeperiod = datasplit[7]
 			const comfirm = datasplit[8]
 			const adminid = datasplit[9]
+			const name = datasplit[10]
+			const leavecount = datasplit[11]
 
 			const adminId = req.body.events[0].source.userId
-			console.log(data)
 
-			if (adminapprove == 'Approve' && comfirm == undefined) {
+			if (adminapprove == 'Approve' && name == undefined) {
+				const Username = comfirm
 				replybot.Confirmreq(
 					adminId,
 					adminapprove,
@@ -237,9 +239,11 @@ class GDayBot {
 					since,
 					untill,
 					Leaveevent,
-					timeperiod
+					timeperiod,
+					Username
 				)
-			} else if (adminapprove == 'Reject' && comfirm == undefined) {
+			} else if (adminapprove == 'Reject' && name == undefined) {
+				const Username = comfirm
 				replybot.Confirmreq(
 					adminId,
 					adminapprove,
@@ -249,7 +253,8 @@ class GDayBot {
 					since,
 					untill,
 					Leaveevent,
-					timeperiod
+					timeperiod,
+					Username
 				)
 			} else if (adminapprove == 'Approve' && comfirm == 'Yes') {
 				replybot.SendConfirmmassage(
@@ -277,6 +282,34 @@ class GDayBot {
 					Leaveevent,
 					timeperiod
 				)
+			} else if (adminapprove == 'Approve' && comfirm == 'No') {
+				const checkUnconfirmN = 'next'
+				replybot.Adminpushmassage(
+					name,
+					iduserrequest,
+					leavetype,
+					leavecount,
+					since,
+					untill,
+					countleave,
+					Leaveevent,
+					timeperiod,
+					checkUnconfirmN
+				)
+			} else if (adminapprove == 'Reject' && comfirm == 'No') {
+				const checkUnconfirmN = 'next'
+				replybot.Adminpushmassage(
+					name,
+					iduserrequest,
+					leavetype,
+					leavecount,
+					since,
+					untill,
+					countleave,
+					Leaveevent,
+					timeperiod,
+					checkUnconfirmN
+				)
 			}
 		}
 
@@ -294,7 +327,7 @@ class GDayBot {
 			messages: [
 				{
 					type: 'template',
-					altText: 'this is an image carousel template',
+					altText: 'Clock-In เข้างาน',
 					template: {
 						type: 'carousel',
 						imageSize: 'cover',
@@ -333,7 +366,7 @@ class GDayBot {
 			messages: [
 				{
 					type: 'template',
-					altText: 'this is an image carousel template',
+					altText: 'Clock-Out ออกงาน',
 					template: {
 						type: 'carousel',
 						imageSize: 'cover',
@@ -372,7 +405,7 @@ class GDayBot {
 			messages: [
 				{
 					type: 'template',
-					altText: 'this is a buttons template',
+					altText: 'Request การลาหยุด',
 					template: {
 						type: 'buttons',
 						thumbnailImageUrl:
